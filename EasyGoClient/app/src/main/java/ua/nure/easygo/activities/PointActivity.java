@@ -11,13 +11,15 @@ import ua.nure.easygo.rest.ControllerStub;
 
 public class PointActivity extends AppCompatActivity {
 
+    public static final String EXTRA_POINT_ID="point_id";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ActivityPointBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
         Point p;
-        p = new ControllerStub().getMap().getPoints().get(1);
+        p = new ControllerStub().getMap(0).getPoints().get(1);
         binding.setPoint(p);
 
     }

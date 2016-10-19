@@ -1,8 +1,12 @@
 package ua.nure.easygo.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -18,8 +22,11 @@ import ua.nure.easygo.utils.GoogleMapAdapter;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 
+    public static final int REQUEST_MAPS=1;
+
     private GoogleMap mMap;
     private Controller controller;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +35,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         controller = new ControllerStub();
+
 
         mapFragment.getMapAsync(this);
 
@@ -47,10 +55,42 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
-mMap.setOnInfoWindowClickListener(this);
-        new GoogleMapAdapter().fill(mMap, controller.getMap());
+        mMap.setOnInfoWindowClickListener(this);
+
+        //
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==RESULT_OK)
+        {
+            if(requestCode==REQUEST_MAPS)
+            {
+                final int mapId = data.getIntExtra(MapsActivity.EXTRA_MAP_ID, 0);
+
+                new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new GoogleMapAdapter().fill(mMap, controller.getMap(mapId));
+                    }
+                }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mMap.clear();
+                        new GoogleMapAdapter().fill(mMap, controller.getMap(mapId));
+                    }
+                }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
+
+
+            }
+        }
     }
 
     @Override
@@ -62,5 +102,22 @@ mMap.setOnInfoWindowClickListener(this);
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, PointActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.show_maps:
+                Intent intent = new Intent(this, MapsActivity.class);
+                startActivityForResult(intent, REQUEST_MAPS);
+                break;
+        }
+        return true;
     }
 }

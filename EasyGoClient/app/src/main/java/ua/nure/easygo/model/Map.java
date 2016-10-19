@@ -1,5 +1,7 @@
 package ua.nure.easygo.model;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 /**
@@ -9,13 +11,23 @@ import java.util.List;
 public class Map {
     private List<Point> points;
     private String name;
+    private Bitmap icon;
 
     public Map() {
     }
 
-    public Map(List<Point> points, String name) {
+    public Map(List<Point> points, String name, Bitmap icon) {
         this.points = points;
         this.name = name;
+        this.icon = icon;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
     }
 
     public List<Point> getPoints() {
