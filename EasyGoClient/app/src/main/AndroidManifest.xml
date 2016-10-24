@@ -37,8 +37,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ua.nure.easygo.activities.PointActivity" />
-        <activity android:name="ua.nure.easygo.activities.MapsActivity"></activity>
+        <activity
+            android:name="ua.nure.easygo.activities.PointActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name="ua.nure.easygo.activities.MapsActivity"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity android:name="ua.nure.easygo.activities.MapInfoActivity"></activity>
     </application>
 
 </manifest>

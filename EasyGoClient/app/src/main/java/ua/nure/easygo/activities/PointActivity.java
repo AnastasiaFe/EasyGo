@@ -12,6 +12,9 @@ import ua.nure.easygo.rest.ControllerStub;
 public class PointActivity extends AppCompatActivity {
 
     public static final String EXTRA_POINT_ID="point_id";
+public static final int MASK_MAP = 0xffff0000;
+    public static final int MASK_POINT=~MASK_MAP;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +22,14 @@ public class PointActivity extends AppCompatActivity {
 
         ActivityPointBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
         Point p;
-        p = new ControllerStub().getMap(0).getPoints().get(1);
+
+        int id = getIntent().getIntExtra(EXTRA_POINT_ID, 0);
+
+        int map=(id&MASK_MAP)>>>16, point=id&MASK_POINT;
+
+        p = new ControllerStub().getMap(map).getPoints().get(point);
         binding.setPoint(p);
+        binding.setMap(new ControllerStub().getMap(map));
 
     }
 }

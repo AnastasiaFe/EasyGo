@@ -5,8 +5,11 @@ package ua.nure.easygo.model;
  */
 
 public class Point {
+    public static int id;
+
     private float x, y;
     private String name;
+    private int pointId;
 
     public Point() {
     }
@@ -15,6 +18,14 @@ public class Point {
         this.x = x;
         this.y = y;
         this.name = name;
+        this.pointId = id++;
+    }
+
+    public Point(float x, float y, String name, int pointId) {
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.pointId = pointId;
     }
 
     public float getX() {
@@ -44,5 +55,9 @@ public class Point {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getPointId() {
+        return pointId;
     }
 }

@@ -1,10 +1,16 @@
 package ua.nure.easygo.activities;
 
+import android.app.SearchableInfo;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -20,7 +26,7 @@ import ua.nure.easygo.rest.Controller;
 import ua.nure.easygo.rest.ControllerStub;
 import ua.nure.easygo.utils.GoogleMapAdapter;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 
     public static final int REQUEST_MAPS=1;
 
@@ -38,6 +44,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
 
         mapFragment.getMapAsync(this);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
     }
 
@@ -101,12 +110,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, PointActivity.class);
+        intent.putExtra(PointActivity.EXTRA_POINT_ID, (Integer)marker.getTag());
         startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+
         return true;
     }
 

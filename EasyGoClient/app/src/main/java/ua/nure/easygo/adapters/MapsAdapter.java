@@ -24,4 +24,6 @@ public class MapsAdapter extends BaseBindableAdapter<Map> {
     public MapsAdapter(Context context, List<Map> items, @LayoutRes int layoutId, int bindVariableId) {
         super(context, items, layoutId, bindVariableId);
     }
+
+
 }

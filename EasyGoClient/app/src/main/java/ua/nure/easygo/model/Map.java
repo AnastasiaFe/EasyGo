@@ -1,6 +1,7 @@
 package ua.nure.easygo.model;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.StateListDrawable;
 
 import java.util.List;
 
@@ -9,9 +10,13 @@ import java.util.List;
  */
 
 public class Map {
+    public static int id;
+
     private List<Point> points;
     private String name;
     private Bitmap icon;
+    private int mapId;
+    private boolean isPrivate;
 
     public Map() {
     }
@@ -20,6 +25,14 @@ public class Map {
         this.points = points;
         this.name = name;
         this.icon = icon;
+        this.mapId = id++;
+    }
+
+    public Map(List<Point> points, String name, Bitmap icon, int mapId) {
+        this.points = points;
+        this.name = name;
+        this.icon = icon;
+        this.mapId = mapId;
     }
 
     public Bitmap getIcon() {
@@ -44,5 +57,17 @@ public class Map {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getMapId() {
+        return mapId;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 }

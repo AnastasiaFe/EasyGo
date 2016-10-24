@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:bind="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="map"
             type="ua.nure.easygo.model.Map" />
+        <import type="ua.nure.easygo.utils.binding.Utils" alias="U"></import>
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+        >
 
         <ImageView
             android:id="@+id/imageView"
@@ -20,6 +25,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:src="@color/colorAccent"
             bind:imageBitmap="@{map.icon}"
             />
 
@@ -33,7 +39,21 @@
             android:layout_marginTop="27dp"
             android:layout_toEndOf="@+id/imageView"
             android:layout_toRightOf="@+id/imageView"
+            tools:text="Map name"
             android:text="@{map.name}"
+
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_edit"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/imageButton"
+            android:onClick="@{(view)->U.showMapInfo(view, map.mapId)}"
+
+            />
     </RelativeLayout>
 </layout>
