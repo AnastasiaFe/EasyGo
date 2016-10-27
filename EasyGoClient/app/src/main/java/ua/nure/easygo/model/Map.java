@@ -70,4 +70,17 @@ public class Map {
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
     }
+
+    @Override
+    public int hashCode() {
+        return mapId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Map)) {
+            return false;
+        }
+        return mapId == ((Map)obj).mapId;
+    }
 }

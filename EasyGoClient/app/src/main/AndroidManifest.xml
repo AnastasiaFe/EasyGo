@@ -43,7 +43,7 @@
         <activity
             android:name="ua.nure.easygo.activities.MapsActivity"
             android:theme="@style/AppTheme.Dialog" />
-        <activity android:name="ua.nure.easygo.activities.MapInfoActivity"></activity>
+        <activity android:name="ua.nure.easygo.activities.MapInfoActivity" />
     </application>
 
 </manifest>

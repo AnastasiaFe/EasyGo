@@ -1,12 +1,17 @@
 package ua.nure.easygo.activities;
 
-import android.app.SearchableInfo;
+import android.database.MatrixCursor;
+import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
@@ -22,16 +27,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import easygo.nure.ua.easygoclient.R;
-import ua.nure.easygo.rest.Controller;
-import ua.nure.easygo.rest.ControllerStub;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ua.nure.easygo.MapsContext;
+import ua.nure.easygo.model.Map;
+import ua.nure.easygo.model.Point;
+import ua.nure.easygo.rest.EasyGoService;
+import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    public static final int REQUEST_MAPS=1;
+    public static final int REQUEST_MAPS = 1;
 
     private GoogleMap mMap;
-    private Controller controller;
+    private EasyGoService service;
+    private MapsContext mapsContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +53,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        controller = new ControllerStub();
 
+        //TODO:stub
+        service = RestService.get();
+
+        mapsContext = new MapsContext();
 
         mapFragment.getMapAsync(this);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, myToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -73,22 +97,46 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode==RESULT_OK)
-        {
-            if(requestCode==REQUEST_MAPS)
-            {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_MAPS) {
                 final int mapId = data.getIntExtra(MapsActivity.EXTRA_MAP_ID, 0);
 
                 new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new GoogleMapAdapter().fill(mMap, controller.getMap(mapId));
+                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                            @Override
+                            public void onResponse(Call<Map> call, Response<Map> response) {
+                                Map m = response.body();
+                                mapsContext.add(m);
+                                new GoogleMapAdapter().fill(mMap, m);
+                            }
+
+                            @Override
+                            public void onFailure(Call<Map> call, Throwable t) {
+                                //TODO: add error handling
+                            }
+                        });
+
                     }
                 }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mMap.clear();
-                        new GoogleMapAdapter().fill(mMap, controller.getMap(mapId));
+                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                            @Override
+                            public void onResponse(Call<Map> call, Response<Map> response) {
+                                mMap.clear();
+                                Map m = response.body();
+                                mapsContext.replace(m);
+                                new GoogleMapAdapter().fill(mMap, m);
+                            }
+
+                            @Override
+                            public void onFailure(Call<Map> call, Throwable t) {
+                                //TODO: add error handling
+                            }
+                        });
+
                     }
                 }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -110,7 +158,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, PointActivity.class);
-        intent.putExtra(PointActivity.EXTRA_POINT_ID, (Integer)marker.getTag());
+        intent.putExtra(PointActivity.EXTRA_POINT_ID, (Integer) marker.getTag());
         startActivity(intent);
     }
 
@@ -118,16 +166,66 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView =
+        final SearchView searchView =
                 (SearchView) MenuItemCompat.getActionView(searchItem);
 
+        searchView.setQueryHint("Cafee");
+        final String[] from = new String[]{"cityName"};
+        final int[] to = new int[]{android.R.id.text1};
+        final CursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1,
+                null,
+                from,
+                to,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+
+        searchView.setSuggestionsAdapter(cursorAdapter);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (mapsContext.isEmpty()) {
+                    return true;
+                }
+                final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});
+                int i = 0;
+                for (Point p : mapsContext.getPoints()) {
+                    if (p.getName().toLowerCase().contains(newText.toLowerCase())) {
+                        c.addRow(new Object[]{i++, p});
+                    }
+                }
+                cursorAdapter.changeCursor(c);
+                return false;
+            }
+        });
+   /*     searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+
+                //Point p = ((MatrixCursor)searchView.getSuggestionsAdapter().getItem(position)).getDouble();
+                //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(p.getX(), p.getY()),10)));
+                return false;
+            }
+        });*/
         return true;
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.show_maps:
+            case R.id.menu_maps:
                 Intent intent = new Intent(this, MapsActivity.class);
                 startActivityForResult(intent, REQUEST_MAPS);
                 break;

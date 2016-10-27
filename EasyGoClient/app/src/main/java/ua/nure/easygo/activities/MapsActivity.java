@@ -12,26 +12,48 @@ import android.widget.ListView;
 
 import easygo.nure.ua.easygoclient.BR;
 import easygo.nure.ua.easygoclient.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ua.nure.easygo.adapters.BaseBindableAdapter;
 import ua.nure.easygo.model.Map;
-import ua.nure.easygo.rest.ControllerStub;
+import ua.nure.easygo.model.MapList;
+import ua.nure.easygo.rest.EasyGoService;
+import ua.nure.easygo.rest.RestService;
 
 public class MapsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     public static final String EXTRA_MAP_ID = "map_id";
 
+    EasyGoService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        ListView listView = (ListView) findViewById(R.id.list_maps);
-        listView.setAdapter(new BaseBindableAdapter<Map>(this, new ControllerStub().getMaps().getMaps(), R.layout.map_item, BR.map));
+        final ListView listView = (ListView) findViewById(R.id.list_maps);
+
+        service = RestService.get();
+
+        service.getMaps().enqueue(new Callback<MapList>() {
+            @Override
+            public void onResponse(Call<MapList> call, Response<MapList> response) {
+                listView.setAdapter(new BaseBindableAdapter<Map>(MapsActivity.this, response.body().getMaps(), R.layout.map_item, BR.map));
+            }
+
+            @Override
+            public void onFailure(Call<MapList> call, Throwable t) {
+//TODO: Add error handling
+            }
+        });
+
         listView.setOnItemClickListener(this);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Maps list");
     }
+
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

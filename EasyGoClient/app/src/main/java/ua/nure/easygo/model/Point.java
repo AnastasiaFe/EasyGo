@@ -60,4 +60,9 @@ public class Point {
     public int getPointId() {
         return pointId;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
