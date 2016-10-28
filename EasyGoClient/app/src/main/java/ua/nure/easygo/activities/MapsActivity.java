@@ -37,7 +37,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         service.getMaps().enqueue(new Callback<MapList>() {
             @Override
             public void onResponse(Call<MapList> call, Response<MapList> response) {
-                listView.setAdapter(new BaseBindableAdapter<Map>(MapsActivity.this, response.body().getMaps(), R.layout.map_item, BR.map));
+                listView.setAdapter(new BaseBindableAdapter<Map>(MapsActivity.this, response.body().maps, R.layout.map_item, BR.map));
             }
 
             @Override

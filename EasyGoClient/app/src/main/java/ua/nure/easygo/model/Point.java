@@ -1,5 +1,7 @@
 package ua.nure.easygo.model;
 
+import ua.nure.easygo.model.attributes.AttributeValues;
+
 /**
  * Created by Oleg on 18.10.2016.
  */
@@ -7,58 +9,37 @@ package ua.nure.easygo.model;
 public class Point {
     public static int id;
 
-    private float x, y;
-    private String name;
-    private int pointId;
+    public float x, y;
+    public String name;
+    public int pointId;
+    public int mapId;
+    public AttributeValues attributeValues;
 
     public Point() {
     }
 
-    public Point(float x, float y, String name) {
+    public Point(float x, float y, String name, AttributeValues attributeValues, int mapId) {
         this.x = x;
         this.y = y;
         this.name = name;
+        this.attributeValues = attributeValues;
+        this.mapId = mapId;
         this.pointId = id++;
+
     }
 
+    /*
     public Point(float x, float y, String name, int pointId) {
         this.x = x;
         this.y = y;
         this.name = name;
         this.pointId = pointId;
     }
-
-    public float getX() {
-        return x;
-    }
+*/
 
     public String getLoc()
     {
         return String.format("%f %f", x, y);
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPointId() {
-        return pointId;
     }
 
     @Override

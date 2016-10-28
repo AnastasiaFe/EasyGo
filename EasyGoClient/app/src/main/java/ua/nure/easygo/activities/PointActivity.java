@@ -36,7 +36,7 @@ public static final int MASK_MAP = 0xffff0000;
             @Override
             public void onResponse(Call<Map> call, Response<Map> response) {
                 Point p;
-                p = response.body().getPoints().get(point);
+                p = response.body().points.get(point);
                 binding.setPoint(p);
                 binding.setMap(response.body());
             }

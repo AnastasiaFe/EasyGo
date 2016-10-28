@@ -7,7 +7,7 @@ import java.util.List;
  */
 
 public class MapList {
-    private List<Map> maps;
+    public List<Map> maps;
 
     public MapList() {
     }
@@ -16,11 +16,5 @@ public class MapList {
         this.maps = maps;
     }
 
-    public List<Map> getMaps() {
-        return maps;
-    }
 
-    public void setMaps(List<Map> maps) {
-        this.maps = maps;
-    }
 }

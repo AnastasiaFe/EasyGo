@@ -195,7 +195,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});
                 int i = 0;
                 for (Point p : mapsContext.getPoints()) {
-                    if (p.getName().toLowerCase().contains(newText.toLowerCase())) {
+                    if (p.name.toLowerCase().contains(newText.toLowerCase())) {
                         c.addRow(new Object[]{i++, p});
                     }
                 }
