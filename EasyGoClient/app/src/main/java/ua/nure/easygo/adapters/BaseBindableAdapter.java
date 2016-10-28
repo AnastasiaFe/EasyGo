@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.DataSetObserver;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.databinding.tool.DataBinder;
-import android.provider.ContactsContract;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 
 import java.util.List;
-
-import easygo.nure.ua.easygoclient.BR;
 
 /**
  * Created by Oleg on 19.10.2016.
@@ -59,7 +55,7 @@ public class BaseBindableAdapter<T> implements ListAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public T getItem(int position) {
         return items.get(position);
     }
 
