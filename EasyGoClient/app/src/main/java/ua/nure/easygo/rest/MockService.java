@@ -57,7 +57,7 @@ public class MockService implements EasyGoService {
                 new Point(49.99757699999999f, 36.23672899999997f, "R.B. SPA & BEAUTY", new AttributeValues(Arrays.asList(new AttributeValue(0, "4"))), 3),
                 new Point(49.9964f, 36.22950300000002f, "Харьков-Проф", new AttributeValues(Arrays.asList(new AttributeValue(0, "4"))), 3),
                 new Point(49.991417f, 36.231295000000046f, "Роял Фото", new AttributeValues(Arrays.asList(new AttributeValue(0, "4"))), 3)
-        ), "Big map", BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.ic_dialog_map), new MapAttributes(Arrays.asList(new MapAttribute("rating", AttributeType.RATING)))));
+        ), "Bigggggggggggggggggggggg map", BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.ic_dialog_map), new MapAttributes(Arrays.asList(new MapAttribute("rating", AttributeType.RATING)))));
     }
 
     MockService() {
