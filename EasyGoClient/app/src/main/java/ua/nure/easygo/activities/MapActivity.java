@@ -177,7 +177,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        Toast.makeText(this, "Long click", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, PointActivity.class);
+        startActivity(intent);
+        //Toast.makeText(this, "Long click", Toast.LENGTH_SHORT).show();
     }
 
     @Override

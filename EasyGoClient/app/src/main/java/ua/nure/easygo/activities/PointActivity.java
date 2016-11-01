@@ -16,10 +16,11 @@ import ua.nure.easygo.rest.RestService;
 
 public class PointActivity extends AppCompatActivity {
 
-    public static final String EXTRA_POINT_ID="point_id";
-public static final int MASK_MAP = 0xffff0000;
-    public static final int MASK_POINT=~MASK_MAP;
+    public static final String EXTRA_POINT_ID = "point_id";
+    public static final int MASK_MAP = 0xffff0000;
+    public static final int MASK_POINT = ~MASK_MAP;
 
+    Point p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,27 +29,31 @@ public static final int MASK_MAP = 0xffff0000;
         final ActivityPointBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
 
 
-        int id = getIntent().getIntExtra(EXTRA_POINT_ID, 0);
+        int id = getIntent().getIntExtra(EXTRA_POINT_ID, -1);
+        if (id >= 0) {
 
-        final int map=(id&MASK_MAP)>>>16, point=id&MASK_POINT;
-        EasyGoService service = RestService.get();
-        service.getMap(map).enqueue(new Callback<Map>() {
-            @Override
-            public void onResponse(Call<Map> call, Response<Map> response) {
-                Point p;
-               // Map m;m.mapAttributes.attributes.get(
-            //    p.attributeValues.values.get(0).attributeId).
-                p = response.body().points.get(point);
-                binding.setPoint(p);
-                binding.setMap(response.body());
-            }
 
-            @Override
-            public void onFailure(Call<Map> call, Throwable t) {
+            final int map = (id & MASK_MAP) >>> 16, point = id & MASK_POINT;
+            EasyGoService service = RestService.get();
+            service.getMap(map).enqueue(new Callback<Map>() {
+                @Override
+                public void onResponse(Call<Map> call, Response<Map> response) {
 
-            }
-        });
+                    p = response.body().points.get(point);
+                    binding.setPoint(p);
+                    binding.setMap(response.body());
+                }
 
+                @Override
+                public void onFailure(Call<Map> call, Throwable t) {
+
+                }
+            });
+        } else {
+            p = new Point();
+            binding.setPoint(p);
+            //binding.setMap(response.body());
+        }
 
     }
 }
