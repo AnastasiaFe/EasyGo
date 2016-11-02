@@ -35,6 +35,7 @@ public class PointActivity extends AppCompatActivity {
         if (id >= 0) {
 
             final int map = MockUtil.getMapIndex(id), point = MockUtil.getPointIndex(id);
+
             EasyGoService service = RestService.get();
             service.getMap(map).enqueue(new Callback<Map>() {
                 @Override
