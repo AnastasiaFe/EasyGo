@@ -1,5 +1,6 @@
 package ua.nure.easygo.model;
 
+import ua.nure.easygo.model.attributes.AttributeValue;
 import ua.nure.easygo.model.attributes.AttributeValues;
 
 /**
@@ -25,7 +26,9 @@ public class Point {
         this.attributeValues = attributeValues;
         this.mapId = mapId;
         this.pointId = id++;
-
+        for (AttributeValue v : attributeValues.values) {
+            v.pointId = pointId;
+        }
     }
 
     /*
@@ -37,8 +40,7 @@ public class Point {
     }
 */
 
-    public String getLoc()
-    {
+    public String getLoc() {
         return String.format("%f %f", x, y);
     }
 

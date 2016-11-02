@@ -40,10 +40,10 @@
         </activity>
         <activity
             android:name="ua.nure.easygo.activities.PointActivity"
-            android:theme="@style/AppTheme.Dialog" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="ua.nure.easygo.activities.MapsActivity"
-            android:theme="@style/AppTheme.Dialog" />
+            android:theme="@style/AppTheme" />
         <activity android:name="ua.nure.easygo.activities.MapInfoActivity" />
     </application>
 

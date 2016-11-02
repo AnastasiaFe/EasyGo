@@ -7,6 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.MapList;
+import ua.nure.easygo.model.Point;
 
 /**
  * Created by Oleg on 27.10.2016.
@@ -18,4 +19,7 @@ public interface EasyGoService {
 
     @GET("maps/{map}")
     Call<Map> getMap(@Path("map") long mapId);
+
+    @GET("points/{point}")
+    Call<Point> getPoint(@Path("point") long pointId);
 }

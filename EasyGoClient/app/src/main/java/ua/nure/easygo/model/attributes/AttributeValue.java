@@ -7,6 +7,7 @@ package ua.nure.easygo.model.attributes;
 public class AttributeValue {
     public int attributeId;
     public String value;
+    public int pointId;
 
     public AttributeValue() {
     }
@@ -14,6 +15,7 @@ public class AttributeValue {
     public AttributeValue(int attributeId, String value) {
         this.attributeId = attributeId;
         this.value = value;
+        //this.pointId = pointId;
     }
 
 }
