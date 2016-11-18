@@ -3,6 +3,7 @@ package ua.nure.easygo.model;
 import android.graphics.Bitmap;
 import android.graphics.drawable.StateListDrawable;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import ua.nure.easygo.model.attributes.MapAttributes;
@@ -22,10 +23,11 @@ public class Map {
     public boolean isPrivate;
 
     public Map() {
+        points=new LinkedList<>();
     }
 
     public Map(List<Point> points, String name, Bitmap icon, MapAttributes mapAttributes) {
-        this.points = points;
+        this.points = new LinkedList<>(points);
         this.name = name;
         this.icon = icon;
         this.mapAttributes = mapAttributes;

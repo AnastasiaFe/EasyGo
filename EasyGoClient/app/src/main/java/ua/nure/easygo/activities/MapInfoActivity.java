@@ -1,8 +1,8 @@
 package ua.nure.easygo.activities;
 
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,37 +15,45 @@ import retrofit2.Response;
 import ua.nure.easygo.Constants;
 import ua.nure.easygo.adapters.MapAttributesAdapter;
 import ua.nure.easygo.model.Map;
+import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 
 public class MapInfoActivity extends AppCompatActivity {
 
     public static final String EXTRA_MAP_ID = "map_id";
-
+    EasyGoService service;
+    boolean creating;
+    Map map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final ActivityMapInfoBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_map_info);
 
+        service = RestService.get();
         final int mapId = getIntent().getIntExtra(EXTRA_MAP_ID, Constants.ID_NONE);
         if (mapId != Constants.ID_NONE) {
-            RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
+
+            service.getMaps().enqueue(new Callback<MapList>() {
                 @Override
-                public void onResponse(Call<Map> call, Response<Map> response) {
-                    Map map = response.body();
+                public void onResponse(Call<MapList> call, Response<MapList> response) {
+                    RestService.mapList = response.body();
+                    map = response.body().maps.get(mapId);
                     binding.setMap(map);
                     binding.listAttributes.setAdapter(new MapAttributesAdapter(MapInfoActivity.this, map.mapAttributes.attributes));
                 }
 
                 @Override
-                public void onFailure(Call<Map> call, Throwable t) {
+                public void onFailure(Call<MapList> call, Throwable t) {
 
                 }
             });
 
         } else {
-            Map map = new Map();
+            creating = true;
+
+            map = new Map();
             binding.setMap(map);
         }
 
@@ -58,6 +66,27 @@ public class MapInfoActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
 
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (creating) {
+            service.getMaps().enqueue(new Callback<MapList>() {
+                @Override
+                public void onResponse(Call<MapList> call, Response<MapList> response) {
+                    RestService.mapList = response.body();
+                    map.mapId = response.body().maps.size();
+                    response.body().maps.add(map);
+                    RestService.save();
+                }
+
+                @Override
+                public void onFailure(Call<MapList> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     @Override

@@ -45,7 +45,7 @@
                     bind:srcCompat="@color/colorAccent" />
 
 
-            <LinearLayout
+            <TableLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -56,12 +56,13 @@
 
                     <TextView
                         android:text="Name"
-                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView" />
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="5dp" />
 
 
-                    <EditText   
+                    <EditText
                         android:id="@+id/text_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -79,9 +80,10 @@
 
                     <TextView
                         android:text="Location"
-                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView4" />
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="5dp" />
 
                     <TextView
                         android:id="@+id/text_loc"
@@ -95,20 +97,15 @@
                 </TableRow>
 
 
-            </LinearLayout>
+            </TableLayout>
 
 
         </LinearLayout>
 
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:elevation="1dp"
-            android:id="@+id/list_attributes"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintLeft_toLeftOf="parent"
-            android:dividerHeight="3dp"
-            tools:listitem="@layout/point_attr_item" />
+   <TableLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/attr_list"></TableLayout>
 
     </LinearLayout>
 </layout>

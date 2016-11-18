@@ -1,10 +1,13 @@
 package ua.nure.easygo.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.MatrixCursor;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,17 +16,18 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,21 +38,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import easygo.nure.ua.easygoclient.R;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
+import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener, MapsContext.MapsContextListener {
 
-    public static final int REQUEST_MAPS = 1;
-
+    public static final int REQUEST_MAPS = 1, REQUEST_POINT_ADDING = 2, REQUEST_MAP_FOR_ADDING_POINT = 3;
+    Intent intAddPoint;
     private GoogleMap mMap;
     private EasyGoService service;
     private MapsContext mapsContext;
@@ -80,10 +84,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
 
+        mapsContextChanged(mapsContext);
+        mapsContext.setListener(this);
+
+
+    }
 
     /**
      * Manipulates the map once available.
@@ -119,8 +128,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_POINT_ADDING) {
+            RestService.get().getMaps().enqueue(new Callback<MapList>() {
+                @Override
+                public void onResponse(Call<MapList> call, Response<MapList> response) {
+                    RestService.mapList = response.body();
+                    mapsContext.replace(response.body().maps.get(0));
+
+                    new GoogleMapAdapter(mMap).fill(mapsContext);
+                }
+
+                @Override
+                public void onFailure(Call<MapList> call, Throwable t) {
+
+                }
+            });
+
+        }
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_MAPS) {
                 drawer.closeDrawer(Gravity.LEFT);
@@ -129,16 +156,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                        service.getMaps().enqueue(new Callback<MapList>() {
                             @Override
-                            public void onResponse(Call<Map> call, Response<Map> response) {
-                                Map m = response.body();
-                                mapsContext.add(m);
-                                new GoogleMapAdapter().fill(mMap, m);
+                            public void onResponse(Call<MapList> call, Response<MapList> response) {
+                                RestService.mapList = response.body();
+                                Map m = response.body().maps.get(mapId);
+                                try {
+                                    mapsContext.add(m);
+                                } catch (MapsContext.MapAlreadyAddedException e) {
+                                    e.printStackTrace();
+                                    onFailure(call, e);
+                                }
+
                             }
 
                             @Override
-                            public void onFailure(Call<Map> call, Throwable t) {
+                            public void onFailure(Call<MapList> call, Throwable t) {
                                 //TODO: add error handling
                             }
                         });
@@ -147,17 +180,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                        service.getMaps().enqueue(new Callback<MapList>() {
                             @Override
-                            public void onResponse(Call<Map> call, Response<Map> response) {
+                            public void onResponse(Call<MapList> call, Response<MapList> response) {
                                 mMap.clear();
-                                Map m = response.body();
+                                RestService.mapList = response.body();
+                                Map m = response.body().maps.get(mapId);
                                 mapsContext.replace(m);
-                                new GoogleMapAdapter().fill(mMap, m);
+                                //new GoogleMapAdapter(mMap).fill(m);
                             }
 
                             @Override
-                            public void onFailure(Call<Map> call, Throwable t) {
+                            public void onFailure(Call<MapList> call, Throwable t) {
                                 //TODO: add error handling
                             }
                         });
@@ -171,14 +205,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }).create().show();
 
 
+            } else if (requestCode == REQUEST_MAP_FOR_ADDING_POINT) {
+
+                intAddPoint.putExtra(PointActivity.EXTRA_MAP_ID, data.getIntExtra(MapsActivity.EXTRA_MAP_ID, 0));
+                startActivityForResult(intAddPoint, REQUEST_POINT_ADDING);
             }
         }
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        Intent intent = new Intent(this, PointActivity.class);
-        startActivity(intent);
+        Intent i = new Intent(this, MapsActivity.class);
+        intAddPoint = new Intent(this, PointActivity.class);
+        intAddPoint.putExtra(PointActivity.EXTRA_LOC, latLng);
+        startActivityForResult(i, REQUEST_MAP_FOR_ADDING_POINT);
+
+
         //Toast.makeText(this, "Long click", Toast.LENGTH_SHORT).show();
     }
 
@@ -258,5 +300,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void mapsContextChanged(final MapsContext mapsContext) {
+        {
+            //refresh points on the map
+            if(mMap!=null) {
+                mMap.clear();
+            }
+            new GoogleMapAdapter(mMap).fill(mapsContext);
+
+            //refresh context strip
+            ViewGroup viewGroup = (ViewGroup) findViewById(R.id.list_map_context);
+            viewGroup.removeAllViews();
+            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            if (!mapsContext.isEmpty()) {
+
+                for (Map m : mapsContext.getMaps()) {
+                    View v = inflater.inflate(R.layout.map_context_item, viewGroup, false);
+                    viewGroup.addView(v);
+                    ((ImageView) v.findViewById(R.id.image_map_icon)).setImageBitmap(m.icon);
+                    ((TextView) v.findViewById(R.id.text_map_name)).setText(m.name);
+                    v.setTag(m);
+                    v.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            Map m = (Map) v.getTag();
+                            mapsContext.remove(m);
+                            return true;
+                        }
+                    });
+                }
+            } else {
+                View v = inflater.inflate(R.layout.label_empty_context, viewGroup, false);
+                viewGroup.addView(v);
+            }
+        }
     }
 }

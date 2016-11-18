@@ -6,8 +6,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 
+import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 
@@ -17,6 +17,12 @@ import ua.nure.easygo.model.Point;
 
 public class GoogleMapAdapter {
 
+    private GoogleMap googleMap;
+
+    public GoogleMapAdapter(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+    }
+
     public Marker addPoint(GoogleMap googleMap, Point p, BitmapDescriptor icon) {
 
         LatLng sydney = new LatLng(p.x, p.y);
@@ -24,13 +30,18 @@ public class GoogleMapAdapter {
         // googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-    public void fill(GoogleMap googleMap, Map map) {
+    public void fill(MapsContext mapsContext) {
+        for (Map m : mapsContext.getMaps()) {
+            fill(m);
+        }
+    }
+
+    public void fill(Map map) {
+        this.googleMap = googleMap;
         BitmapDescriptor icon;
         if (map.icon == null) {
             icon = BitmapDescriptorFactory.defaultMarker();
-        }
-        else
-        {
+        } else {
             icon = BitmapDescriptorFactory.fromBitmap(map.icon);
         }
 

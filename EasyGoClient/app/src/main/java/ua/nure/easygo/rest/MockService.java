@@ -5,11 +5,8 @@ import android.graphics.BitmapFactory;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Path;
-import ua.nure.easygo.MockUtil;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.model.Point;
@@ -70,13 +67,10 @@ public class MockService implements EasyGoService {
     }
 
     @Override
-    public Call<Map> getMap(@Path("map") long mapId) {
-
-        return new BaseCall<>(mapList.maps.get((int) mapId));
+    public Call<String> saveMaps(MapList mapList) {
+        this.mapList = mapList;
+        return new BaseCall<>("Ok");
     }
 
-    @Override
-    public Call<Point> getPoint(@Path("point") long pointId) {
-        return new BaseCall<>(mapList.maps.get(MockUtil.getMapIndex(pointId)).points.get(MockUtil.getPointIndex(pointId)));
-    }
+
 }

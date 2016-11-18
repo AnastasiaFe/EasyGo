@@ -3,7 +3,9 @@ package ua.nure.easygo.rest;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.MapList;
@@ -14,12 +16,10 @@ import ua.nure.easygo.model.Point;
  */
 
 public interface EasyGoService {
-    @GET("maps")
+    @GET("api/")
     Call<MapList> getMaps();
 
-    @GET("maps/{map}")
-    Call<Map> getMap(@Path("map") long mapId);
+    @POST("api/")
+    Call<String> saveMaps(@Body MapList mapList);
 
-    @GET("points/{point}")
-    Call<Point> getPoint(@Path("point") long pointId);
 }
