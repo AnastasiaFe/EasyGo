@@ -17,6 +17,9 @@ public class User implements Entity {
 	
 	@Override
 	public boolean equals(Object obj) {	
+		if (obj == null || !(obj instanceof User)) {
+			return false;
+		}
 		return this.id == ((User)obj).id;
 	}
 	
