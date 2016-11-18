@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.nure.easygo.entity.*;
+import ua.nure.easygo.model.*;
 
 /**
  * Class for connection to MySQL database on localhost and running SELECT and
@@ -36,7 +36,7 @@ public class MySqlConnector {
 	 *            SQL query
 	 * @throws SQLException
 	 */
-	public void execute(final String query) throws SQLException {
+	public static synchronized void execute(final String query) throws SQLException {
 		try {
 			// opening database connection to MySQL server
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -63,7 +63,7 @@ public class MySqlConnector {
 	 * @return list of columns
 	 * @throws SQLException
 	 */
-	public List<User> selectUser(final String query) throws SQLException {
+	public static synchronized List<User> selectUser(final String query) throws SQLException {
 		List<User> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -91,7 +91,7 @@ public class MySqlConnector {
 	 * @return list of columns
 	 * @throws SQLException
 	 */
-	public List<GoMap> selectGoMap(final String query) throws SQLException {
+	public static synchronized List<GoMap> selectGoMap(final String query) throws SQLException {
 		List<GoMap> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -119,7 +119,7 @@ public class MySqlConnector {
 	 * @return list of columns
 	 * @throws SQLException
 	 */
-	public List<Mark> selectMark(final String query) throws SQLException {
+	public static synchronized List<Mark> selectMark(final String query) throws SQLException {
 		List<Mark> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);

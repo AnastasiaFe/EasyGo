@@ -28,6 +28,9 @@ public class GoMap implements Entity {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof GoMap)) {
+			return false;
+		}
 		return this.id == ((GoMap)obj).id;
 	}
 	

@@ -20,6 +20,9 @@ public class Mark implements Entity {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof Mark)) {
+			return false;
+		}
 		return this.id == ((Mark) obj).id;
 	}
 
