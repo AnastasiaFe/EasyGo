@@ -2,7 +2,9 @@ package ua.nure.easygo.rest;
 
 import java.io.IOException;
 
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,15 +22,30 @@ public class BaseCall<T> implements Call<T> {
         this.body = body;
     }
 
+    /**
+     * Failed
+     */
+    public BaseCall() {
+
+    }
+
     @Override
     public Response<T> execute() throws IOException {
 
-        return null;
+        if (body == null) {
+            return Response.error(404, ResponseBody.create(MediaType.parse("application.json"), ""));
+        }
+        return Response.success(body);
     }
 
     @Override
     public void enqueue(Callback<T> callback) {
-        callback.onResponse(this, Response.success(body));
+        if (body != null) {
+            callback.onResponse(this, Response.success(body));
+        } else {
+            callback.onFailure(this, null);
+        }
+
     }
 
     @Override

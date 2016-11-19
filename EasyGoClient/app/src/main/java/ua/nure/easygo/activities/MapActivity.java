@@ -1,8 +1,10 @@
 package ua.nure.easygo.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
 import android.location.Criteria;
 import android.location.Location;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
@@ -38,13 +41,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import easygo.nure.ua.easygoclient.R;
+import easygo.nure.ua.easygoclient.databinding.NavHeaderMainBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ua.nure.easygo.LoginHelper;
 import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.model.Point;
+import ua.nure.easygo.model.User;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
@@ -52,11 +58,15 @@ import ua.nure.easygo.utils.GoogleMapAdapter;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener, MapsContext.MapsContextListener {
 
     public static final int REQUEST_MAPS = 1, REQUEST_POINT_ADDING = 2, REQUEST_MAP_FOR_ADDING_POINT = 3;
+    private static final int REQUEST_LOGIN = 4;
     Intent intAddPoint;
     private GoogleMap mMap;
     private EasyGoService service;
     private MapsContext mapsContext;
     private DrawerLayout drawer;
+    NavHeaderMainBinding binding;
+
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +91,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, myToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+
+        binding = NavHeaderMainBinding.bind(header);
 
         mapsContextChanged(mapsContext);
         mapsContext.setListener(this);
+
+        if (LoginHelper.getInstance().hasCredentials(this)) {
+            onActivityResult(REQUEST_LOGIN, RESULT_OK, null);
+        }
 
 
     }
@@ -113,6 +130,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            //return;
+        }
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         if (location != null) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
@@ -209,17 +236,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 intAddPoint.putExtra(PointActivity.EXTRA_MAP_ID, data.getIntExtra(MapsActivity.EXTRA_MAP_ID, 0));
                 startActivityForResult(intAddPoint, REQUEST_POINT_ADDING);
+            } else if (requestCode == REQUEST_LOGIN) {
+
+
+                RestService.get().getUser(LoginHelper.getInstance().getLogin(this)).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        binding.setUser(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+
+                    }
+                });
             }
         }
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        Intent i = new Intent(this, MapsActivity.class);
+        MapsActivity.startWithCertainMapList(this, REQUEST_MAP_FOR_ADDING_POINT, mapsContext.getMapIds(), "Select map for point adding", false);
+
         intAddPoint = new Intent(this, PointActivity.class);
         intAddPoint.putExtra(PointActivity.EXTRA_LOC, latLng);
-        startActivityForResult(i, REQUEST_MAP_FOR_ADDING_POINT);
-
 
         //Toast.makeText(this, "Long click", Toast.LENGTH_SHORT).show();
     }
@@ -295,8 +335,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_maps:
-                Intent intent = new Intent(this, MapsActivity.class);
-                startActivityForResult(intent, REQUEST_MAPS);
+                MapsActivity.startWithFullMapList(this, REQUEST_MAPS, "Select map to view", true);
+
+                break;
+            case R.id.menu_login:
+                Intent loginIntent = new Intent(this, LoginActivity.class);
+                startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
         }
         return true;
@@ -306,7 +350,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void mapsContextChanged(final MapsContext mapsContext) {
         {
             //refresh points on the map
-            if(mMap!=null) {
+            if (mMap != null) {
                 mMap.clear();
             }
             new GoogleMapAdapter(mMap).fill(mapsContext);

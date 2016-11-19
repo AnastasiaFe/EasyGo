@@ -4,9 +4,11 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="point"
             type="ua.nure.easygo.model.Point" />
+
         <variable
             name="map"
             type="ua.nure.easygo.model.Map" />
@@ -32,23 +34,24 @@
             tools:layout_editor_absoluteY="0dp"
             tools:layout_editor_absoluteX="0dp">
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@android:color/holo_blue_dark"
-                    bind:imageBitmap="@{map.icon}"
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:src="@android:color/holo_blue_dark"
+                bind:imageBitmap="@{map.icon}"
 
-                    bind:srcCompat="@color/colorAccent" />
+                bind:srcCompat="@color/colorAccent" />
 
 
             <TableLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -102,10 +105,10 @@
 
         </LinearLayout>
 
-   <TableLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:id="@+id/attr_list"></TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/attr_list"></TableLayout>
 
     </LinearLayout>
 </layout>

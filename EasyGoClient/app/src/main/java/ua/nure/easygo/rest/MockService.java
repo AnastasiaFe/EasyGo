@@ -5,11 +5,13 @@ import android.graphics.BitmapFactory;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import retrofit2.Call;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.model.Point;
+import ua.nure.easygo.model.User;
 import ua.nure.easygo.model.attributes.AttributeType;
 import ua.nure.easygo.model.attributes.AttributeValue;
 import ua.nure.easygo.model.attributes.AttributeValues;
@@ -23,8 +25,14 @@ import ua.nure.easygo.model.attributes.MapAttributes;
 public class MockService implements EasyGoService {
 
     static MapList mapList;
+    static List<User> users;
 
     static {
+        users = new LinkedList<>();
+        users.add(new User("Oleh Havrysh", "havrysh@nure.ua", "qwerty", null));
+        users.add(new User("Nastya Fedorenko", "fedorenko@nure.ua", "123456", null));
+
+
         mapList = new MapList(new LinkedList<Map>());
         Map.id = 0;
         Point.id = 0;
@@ -70,6 +78,16 @@ public class MockService implements EasyGoService {
     public Call<String> saveMaps(MapList mapList) {
         this.mapList = mapList;
         return new BaseCall<>("Ok");
+    }
+
+    @Override
+    public Call<User> getUser(String login) {
+        for (User u : users) {
+            if (login.equals(u.login)) {
+                return new BaseCall<>(u);
+            }
+        }
+        return new BaseCall<>();
     }
 
 

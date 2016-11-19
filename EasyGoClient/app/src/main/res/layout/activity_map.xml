@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-  <include layout="@layout/map_activity_content"></include>
+    <include layout="@layout/map_activity_content"></include>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

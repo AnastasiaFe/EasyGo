@@ -53,6 +53,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"></activity>
+        <activity android:name="ua.nure.easygo.activities.LoginActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-<item android:title="Maps" android:id="@+id/menu_maps"></item>
+    <item
+        android:id="@+id/menu_maps"
+        android:title="Maps"></item>
+    <item
+        android:id="@+id/menu_login"
+        android:title="Log in"></item>
 </menu>

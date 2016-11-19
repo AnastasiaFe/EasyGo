@@ -39,6 +39,15 @@ public class MapsContext {
         return maps;
     }
 
+    public int[] getMapIds() {
+        int[] res = new int[maps.size()];
+        int i = 0;
+        for (Map m : maps) {
+            res[i++] = m.mapId;
+        }
+        return res;
+    }
+
     public void remove(Map map) {
         maps.remove(map);
         listener.mapsContextChanged(this);
