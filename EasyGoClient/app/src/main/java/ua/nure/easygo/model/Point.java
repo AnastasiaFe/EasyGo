@@ -17,6 +17,7 @@ public class Point {
     public AttributeValues attributeValues;
 
     public Point() {
+        attributeValues = new AttributeValues();
     }
 
     public Point(float x, float y, String name, AttributeValues attributeValues, int mapId) {

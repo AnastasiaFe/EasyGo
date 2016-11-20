@@ -60,12 +60,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public static final int REQUEST_MAPS = 1, REQUEST_POINT_ADDING = 2, REQUEST_MAP_FOR_ADDING_POINT = 3;
     private static final int REQUEST_LOGIN = 4;
     Intent intAddPoint;
+    NavHeaderMainBinding binding;
     private GoogleMap mMap;
     private EasyGoService service;
     private MapsContext mapsContext;
     private DrawerLayout drawer;
-    NavHeaderMainBinding binding;
-
     private NavigationView navigationView;
 
     @Override
@@ -163,7 +162,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 @Override
                 public void onResponse(Call<MapList> call, Response<MapList> response) {
                     RestService.mapList = response.body();
-                    mapsContext.replace(response.body().maps.get(0));
+                    //mapsContext.replace(response.body().maps.get(0));
 
                     new GoogleMapAdapter(mMap).fill(mapsContext);
                 }

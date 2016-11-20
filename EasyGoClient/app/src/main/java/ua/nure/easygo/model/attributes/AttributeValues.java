@@ -1,5 +1,6 @@
 package ua.nure.easygo.model.attributes;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,5 +15,18 @@ public class AttributeValues {
     }
 
     public AttributeValues() {
+        values = new LinkedList<>();
+    }
+
+    public void setValue(int attributeId, String value) {
+        for (AttributeValue v : values) {
+            if (v.attributeId == attributeId) {
+                v.value = value;
+                return;
+            }
+        }
+        //if no value found
+        values.add(new AttributeValue(attributeId, value));
+
     }
 }

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.LinkedList;
@@ -38,6 +39,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String EXTRA_MAP_ITEMS = "map_items", EXTRA_TITLE = "title", EXTRA_EDITING = "editing";
     EasyGoService service;
     ListView listView;
+    ListAdapter adapter;
     private boolean editing;
 
     public static void startWithFullMapList(Activity context, int requestCode, String title, boolean editing) {
@@ -83,7 +85,8 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }
                 }
-                listView.setAdapter(new BaseBindableAdapter<Map>(MapsActivity.this, maps, R.layout.map_item, BR.map) {
+
+                adapter = new BaseBindableAdapter<Map>(MapsActivity.this, maps, R.layout.map_item, BR.map) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View v = super.getView(position, convertView, parent);
@@ -92,7 +95,10 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                         return v;
                     }
-                });
+                };
+
+
+                listView.setAdapter(adapter);
             }
 
             @Override
@@ -113,7 +119,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent res = new Intent();
-        res.putExtra(EXTRA_MAP_ID, position);
+        res.putExtra(EXTRA_MAP_ID, ((Map) adapter.getItem(position)).mapId);
         setResult(RESULT_OK, res);
         finish();
     }

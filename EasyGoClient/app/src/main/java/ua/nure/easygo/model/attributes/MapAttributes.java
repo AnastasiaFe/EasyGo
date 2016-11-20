@@ -1,5 +1,6 @@
 package ua.nure.easygo.model.attributes;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -10,10 +11,11 @@ public class MapAttributes {
     public List<MapAttribute> attributes;
 
     public MapAttributes(List<MapAttribute> attributes) {
-        this.attributes = attributes;
+        this.attributes = new LinkedList<>(attributes);
     }
 
     public MapAttributes() {
+        attributes = new LinkedList<>();
     }
 
 

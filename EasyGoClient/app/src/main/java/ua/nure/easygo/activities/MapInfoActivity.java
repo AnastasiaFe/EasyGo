@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListAdapter;
 
 import easygo.nure.ua.easygoclient.R;
 import easygo.nure.ua.easygoclient.databinding.ActivityMapInfoBinding;
@@ -16,6 +18,8 @@ import ua.nure.easygo.Constants;
 import ua.nure.easygo.adapters.MapAttributesAdapter;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.MapList;
+import ua.nure.easygo.model.attributes.AttributeType;
+import ua.nure.easygo.model.attributes.MapAttribute;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 
@@ -25,6 +29,7 @@ public class MapInfoActivity extends AppCompatActivity {
     EasyGoService service;
     boolean creating;
     Map map;
+    ListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,9 @@ public class MapInfoActivity extends AppCompatActivity {
                     RestService.mapList = response.body();
                     map = response.body().maps.get(mapId);
                     binding.setMap(map);
-                    binding.listAttributes.setAdapter(new MapAttributesAdapter(MapInfoActivity.this, map.mapAttributes.attributes));
+
+                    adapter = new MapAttributesAdapter(MapInfoActivity.this, map.mapAttributes.attributes);
+                    binding.listAttributes.setAdapter(adapter);
                 }
 
                 @Override
@@ -55,10 +62,20 @@ public class MapInfoActivity extends AppCompatActivity {
 
             map = new Map();
             binding.setMap(map);
+            adapter = new MapAttributesAdapter(MapInfoActivity.this, map.mapAttributes.attributes);
+            binding.listAttributes.setAdapter(adapter);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        binding.buttonAddAttribute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                map.mapAttributes.attributes.add(new MapAttribute("new", AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
+                binding.listAttributes.invalidateViews();
+            }
+        });
     }
 
     @Override

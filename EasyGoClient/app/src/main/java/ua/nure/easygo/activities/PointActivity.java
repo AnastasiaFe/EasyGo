@@ -38,11 +38,12 @@ public class PointActivity extends AppCompatActivity {
         service = RestService.get();
 
         int id = getIntent().getIntExtra(EXTRA_POINT_ID, -1);
+        final int mapId;
         if (id >= 0) {
 
             final int map = MockUtil.getMapIndex(id), point = MockUtil.getPointIndex(id);
 
-
+            mapId = map;
             service.getMaps().enqueue(new Callback<MapList>() {
                 @Override
                 public void onResponse(Call<MapList> call, Response<MapList> response) {
@@ -65,7 +66,7 @@ public class PointActivity extends AppCompatActivity {
             p.x = (float) location.latitude;
             p.y = (float) location.longitude;
             binding.setPoint(p);
-            final int mapId =
+            mapId =
                     getIntent().getIntExtra(EXTRA_MAP_ID, 0);
             service.getMaps().enqueue(new Callback<MapList>() {
                 @Override
@@ -83,13 +84,29 @@ public class PointActivity extends AppCompatActivity {
             });
         }
 
-        TableLayout table;
+        final TableLayout table;
         table = (TableLayout) findViewById(R.id.attr_list);
 
-        if (p.attributeValues != null) {
-            PointAttrAdapter attrAdapter = new PointAttrAdapter(this, p.attributeValues, table);
-            //!table.setAdapter(attrAdapter);
-        }
+        //if (p.attributeValues != null) {
+
+        service.getMaps().enqueue(new Callback<MapList>() {
+            @Override
+            public void onResponse(Call<MapList> call, Response<MapList> response) {
+                Map m = response.body().maps.get(mapId);
+
+
+                PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, m.mapAttributes, p.attributeValues, table);
+            }
+
+            @Override
+            public void onFailure(Call<MapList> call, Throwable t) {
+
+            }
+        });
+
+
+        //!table.setAdapter(attrAdapter);
+        //}
 
     }
 

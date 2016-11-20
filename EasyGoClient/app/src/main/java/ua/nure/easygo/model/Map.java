@@ -24,6 +24,7 @@ public class Map {
 
     public Map() {
         points=new LinkedList<>();
+        mapAttributes = new MapAttributes();
     }
 
     public Map(List<Point> points, String name, Bitmap icon, MapAttributes mapAttributes) {

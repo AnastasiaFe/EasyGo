@@ -24,8 +24,8 @@ import ua.nure.easygo.model.attributes.MapAttributes;
 
 public class MockService implements EasyGoService {
 
-    static MapList mapList;
-    static List<User> users;
+    static final MapList mapList;
+    static final List<User> users;
 
     static {
         users = new LinkedList<>();
@@ -76,7 +76,7 @@ public class MockService implements EasyGoService {
 
     @Override
     public Call<String> saveMaps(MapList mapList) {
-        this.mapList = mapList;
+      //  this.mapList = mapList;
         return new BaseCall<>("Ok");
     }
 

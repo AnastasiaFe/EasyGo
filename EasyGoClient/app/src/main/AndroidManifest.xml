@@ -51,9 +51,11 @@
             android:theme="@style/AppTheme" />
         <activity android:name="ua.nure.easygo.activities.MapInfoActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name="ua.nure.easygo.activities.LoginActivity"
             android:label="@string/title_activity_login"></activity>
-        <activity android:name="ua.nure.easygo.activities.LoginActivity" />
+
+        <activity android:name="ua.nure.easygo.activities.RegisterActivity" android:label="Registration"/>
+
     </application>
 
 </manifest>

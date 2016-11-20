@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Oleg on 19.10.2016.
  */
 
-public class BaseBindableAdapter<T> implements ListAdapter {
+public class BaseBindableAdapter<T> implements ListAdapter{
     protected LayoutInflater layoutInflater;
     private final List<T> items;
     private final int layoutId;
