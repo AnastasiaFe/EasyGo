@@ -25,6 +25,7 @@ public class RegisterActivity extends Activity {
     private static final int REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.registration);
         TextView addPhotoTextView=(TextView)findViewById(R.id.add_photo);
         addPhotoTextView.setOnClickListener(new View.OnClickListener() {
