@@ -12,10 +12,8 @@ import easygo.nure.ua.easygoclient.databinding.ActivityPointBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ua.nure.easygo.MockUtil;
 import ua.nure.easygo.adapters.PointAttrAdapter;
 import ua.nure.easygo.model.Map;
-import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
@@ -25,8 +23,6 @@ public class PointActivity extends AppCompatActivity {
     public static final String EXTRA_POINT_ID = "point_id", EXTRA_MAP_ID = "map_id", EXTRA_LOC = "location";
 
 
-    Point p;
-    Map m;
     EasyGoService service;
     boolean creating;
 
@@ -35,74 +31,80 @@ public class PointActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         final ActivityPointBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
+        final TableLayout table;
+        table = (TableLayout) findViewById(R.id.attr_list);
         service = RestService.get();
 
         int id = getIntent().getIntExtra(EXTRA_POINT_ID, -1);
-        final int mapId;
+
         if (id >= 0) {
 
-            final int map = MockUtil.getMapIndex(id), point = MockUtil.getPointIndex(id);
-
-            mapId = map;
-            service.getMaps().enqueue(new Callback<MapList>() {
+            service.getPoint(id).enqueue(new Callback<Point>() {
                 @Override
-                public void onResponse(Call<MapList> call, Response<MapList> response) {
+                public void onResponse(Call<Point> call, Response<Point> response) {
 
-                    p = response.body().maps.get(map).points.get(point);
-                    binding.setPoint(p);
-                    m = response.body().maps.get(map);
-                    binding.setMap(m);
+                    binding.setPoint(response.body());
+                    service.getMap(response.body().mapId).enqueue(new Callback<Map>() {
+                        @Override
+                        public void onResponse(Call<Map> call, Response<Map> response) {
+                            binding.setMap(response.body());
+                        }
+
+                        @Override
+                        public void onFailure(Call<Map> call, Throwable t) {
+
+                        }
+                    });
+
                 }
 
                 @Override
-                public void onFailure(Call<MapList> call, Throwable t) {
+                public void onFailure(Call<Point> call, Throwable t) {
 
                 }
             });
         } else {
             creating = true;
-            p = new Point();
+            Point p = new Point();
             LatLng location = getIntent().getParcelableExtra(EXTRA_LOC);
             p.x = (float) location.latitude;
             p.y = (float) location.longitude;
             binding.setPoint(p);
-            mapId =
-                    getIntent().getIntExtra(EXTRA_MAP_ID, 0);
-            service.getMaps().enqueue(new Callback<MapList>() {
+            long mapId =
+                    getIntent().getLongExtra(EXTRA_MAP_ID, 0);
+            service.getMap(mapId).enqueue(new Callback<Map>() {
                 @Override
-                public void onResponse(Call<MapList> call, Response<MapList> response) {
-                    RestService.mapList = response.body();
-                    m = response.body().maps.get(mapId);
-                    binding.setMap(m);
+                public void onResponse(Call<Map> call, Response<Map> response) {
 
+
+                    binding.setMap(response.body());
+                    PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes, binding.getPoint().attributeValues, table);
                 }
 
                 @Override
-                public void onFailure(Call<MapList> call, Throwable t) {
+                public void onFailure(Call<Map> call, Throwable t) {
 
                 }
             });
         }
 
-        final TableLayout table;
-        table = (TableLayout) findViewById(R.id.attr_list);
+
 
         //if (p.attributeValues != null) {
 
-        service.getMaps().enqueue(new Callback<MapList>() {
+/*        service.getMaps().enqueue(new Callback<MapList>() {
             @Override
             public void onResponse(Call<MapList> call, Response<MapList> response) {
                 Map m = response.body().maps.get(mapId);
 
 
-                PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, m.mapAttributes, p.attributeValues, table);
             }
 
             @Override
             public void onFailure(Call<MapList> call, Throwable t) {
 
             }
-        });
+        });*/
 
 
         //!table.setAdapter(attrAdapter);
@@ -116,10 +118,10 @@ public class PointActivity extends AppCompatActivity {
 
         if (creating) {
             setResult(RESULT_OK);
-            p.mapId = m.mapId;
+            /*p.mapId = m.mapId;
             p.pointId = m.points.size();
-            m.points.add(p);
+            m.points.add(p);*/
         }
-        RestService.save();
+
     }
 }

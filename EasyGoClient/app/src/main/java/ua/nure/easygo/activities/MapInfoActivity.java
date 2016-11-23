@@ -17,7 +17,6 @@ import retrofit2.Response;
 import ua.nure.easygo.Constants;
 import ua.nure.easygo.adapters.MapAttributesAdapter;
 import ua.nure.easygo.model.Map;
-import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.model.attributes.AttributeType;
 import ua.nure.easygo.model.attributes.MapAttribute;
 import ua.nure.easygo.rest.EasyGoService;
@@ -27,42 +26,40 @@ public class MapInfoActivity extends AppCompatActivity {
 
     public static final String EXTRA_MAP_ID = "map_id";
     EasyGoService service;
-    boolean creating;
-    Map map;
+
+
     ListAdapter adapter;
+
+    ActivityMapInfoBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final ActivityMapInfoBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_map_info);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_map_info);
 
         service = RestService.get();
         final int mapId = getIntent().getIntExtra(EXTRA_MAP_ID, Constants.ID_NONE);
         if (mapId != Constants.ID_NONE) {
 
-            service.getMaps().enqueue(new Callback<MapList>() {
+            service.getMap(mapId).enqueue(new Callback<Map>() {
                 @Override
-                public void onResponse(Call<MapList> call, Response<MapList> response) {
-                    RestService.mapList = response.body();
-                    map = response.body().maps.get(mapId);
-                    binding.setMap(map);
+                public void onResponse(Call<Map> call, Response<Map> response) {
+                    binding.setMap(response.body());
 
-                    adapter = new MapAttributesAdapter(MapInfoActivity.this, map.mapAttributes.attributes);
+                    adapter = new MapAttributesAdapter(MapInfoActivity.this, response.body().mapAttributes);
                     binding.listAttributes.setAdapter(adapter);
                 }
 
                 @Override
-                public void onFailure(Call<MapList> call, Throwable t) {
+                public void onFailure(Call<Map> call, Throwable t) {
 
                 }
             });
 
         } else {
-            creating = true;
-
-            map = new Map();
-            binding.setMap(map);
-            adapter = new MapAttributesAdapter(MapInfoActivity.this, map.mapAttributes.attributes);
+            binding.setMap(new Map());
+            adapter = new MapAttributesAdapter(MapInfoActivity.this, binding.getMap().mapAttributes);
             binding.listAttributes.setAdapter(adapter);
         }
 
@@ -72,7 +69,7 @@ public class MapInfoActivity extends AppCompatActivity {
         binding.buttonAddAttribute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                map.mapAttributes.attributes.add(new MapAttribute("new", AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
+                binding.getMap().mapAttributes.add(new MapAttribute("new", AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
                 binding.listAttributes.invalidateViews();
             }
         });
@@ -86,31 +83,21 @@ public class MapInfoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (creating) {
-            service.getMaps().enqueue(new Callback<MapList>() {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.save) {
+            service.postMap(binding.getMap()).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<MapList> call, Response<MapList> response) {
-                    RestService.mapList = response.body();
-                    map.mapId = response.body().maps.size();
-                    response.body().maps.add(map);
-                    RestService.save();
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
                 }
 
                 @Override
-                public void onFailure(Call<MapList> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
 
                 }
             });
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.save) {
-            //save
-        }
         return super.onOptionsItemSelected(item);
+
     }
 }

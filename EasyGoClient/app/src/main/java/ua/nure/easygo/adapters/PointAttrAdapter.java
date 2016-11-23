@@ -7,16 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.List;
+
 import easygo.nure.ua.easygoclient.R;
 import ua.nure.easygo.model.attributes.AttributeValue;
 import ua.nure.easygo.model.attributes.AttributeValues;
 import ua.nure.easygo.model.attributes.MapAttribute;
-import ua.nure.easygo.model.attributes.MapAttributes;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 
@@ -27,19 +29,19 @@ import ua.nure.easygo.rest.RestService;
 public class PointAttrAdapter {
 
 
-    private final MapAttributes mapAttributes;
+    private final List<MapAttribute> mapAttributes;
     LayoutInflater layoutInflater;
     EasyGoService service;
     AttributeValues values;
 
-    public PointAttrAdapter(Context context, MapAttributes mapAttributes, AttributeValues values, TableLayout root) {
+    public PointAttrAdapter(Context context, List<MapAttribute> mapAttributes, AttributeValues values, TableLayout root) {
 
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mapAttributes = mapAttributes;
         this.values = values;
         service = RestService.get();
 
-        for (int i = 0; i < mapAttributes.attributes.size(); i++) {
+        for (int i = 0; i < mapAttributes.size(); i++) {
             root.addView(getView(i, root));
         }
     }
@@ -51,7 +53,7 @@ public class PointAttrAdapter {
         v = layoutInflater.inflate(R.layout.point_attr_item, parent, false);
 
 
-        final MapAttribute mapAttribute = mapAttributes.attributes.get(position);
+        final MapAttribute mapAttribute = mapAttributes.get(position);
 
 
         AttributeValue value = null;

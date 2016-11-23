@@ -5,9 +5,9 @@ package ua.nure.easygo.utils;
  */
 
 public class ArrayUtil {
-    public static boolean contains(int[] array, int val) {
-        for (Integer i : array) {
-            if (i.equals(val)) {
+    public static boolean contains(long[] array, long val) {
+        for (long i : array) {
+            if (i==val) {
                 return true;
             }
         }

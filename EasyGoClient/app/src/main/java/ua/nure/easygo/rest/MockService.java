@@ -1,27 +1,9 @@
 package ua.nure.easygo.rest;
 
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
-import retrofit2.Call;
-import ua.nure.easygo.model.Map;
-import ua.nure.easygo.model.MapList;
-import ua.nure.easygo.model.Point;
-import ua.nure.easygo.model.User;
-import ua.nure.easygo.model.attributes.AttributeType;
-import ua.nure.easygo.model.attributes.AttributeValue;
-import ua.nure.easygo.model.attributes.AttributeValues;
-import ua.nure.easygo.model.attributes.MapAttribute;
-import ua.nure.easygo.model.attributes.MapAttributes;
-
 /**
  * Created by Oleg on 27.10.2016.
  */
-
+/*
 public class MockService implements EasyGoService {
 
     static final MapList mapList;
@@ -92,3 +74,4 @@ public class MockService implements EasyGoService {
 
 
 }
+*/

@@ -1,38 +1,35 @@
 package ua.nure.easygo.model;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.StateListDrawable;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import ua.nure.easygo.model.attributes.MapAttributes;
+import ua.nure.easygo.model.attributes.MapAttribute;
 
 /**
  * Created by Oleg on 18.10.2016.
  */
 
 public class Map {
-    public static int id;
 
-    public List<Point> points;
-    public MapAttributes mapAttributes;
+    public List<MapAttribute> mapAttributes;
     public String name;
     public Bitmap icon;
-    public int mapId;
+    public long mapId;
+    public long ownerId;
     public boolean isPrivate;
 
     public Map() {
-        points=new LinkedList<>();
-        mapAttributes = new MapAttributes();
+        mapAttributes = new LinkedList<>();
     }
 
-    public Map(List<Point> points, String name, Bitmap icon, MapAttributes mapAttributes) {
-        this.points = new LinkedList<>(points);
+    public Map(long mapId, String name, Bitmap icon, List<MapAttribute> mapAttributes) {
+
         this.name = name;
         this.icon = icon;
         this.mapAttributes = mapAttributes;
-        this.mapId = id++;
+        this.mapId = mapId;
     }
 
     /*
@@ -47,7 +44,7 @@ public class Map {
 
     @Override
     public int hashCode() {
-        return mapId;
+        return (int) mapId;
     }
 
     @Override

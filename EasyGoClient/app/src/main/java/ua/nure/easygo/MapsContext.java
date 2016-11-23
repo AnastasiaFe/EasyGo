@@ -1,12 +1,9 @@
 package ua.nure.easygo;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import ua.nure.easygo.model.Map;
-import ua.nure.easygo.model.Point;
 
 /**
  * Describes which maps are currently showed on the screen
@@ -27,20 +24,13 @@ public class MapsContext {
         listener.mapsContextChanged(this);
     }
 
-    public Iterable<Point> getPoints() {
-        List<Point> pointList = new LinkedList<>();
-        for (Map m : maps) {
-            pointList.addAll(m.points);
-        }
-        return pointList;
-    }
 
     public Set<Map> getMaps() {
         return maps;
     }
 
-    public int[] getMapIds() {
-        int[] res = new int[maps.size()];
+    public long[] getMapIds() {
+        long[] res = new long[maps.size()];
         int i = 0;
         for (Map m : maps) {
             res[i++] = m.mapId;
