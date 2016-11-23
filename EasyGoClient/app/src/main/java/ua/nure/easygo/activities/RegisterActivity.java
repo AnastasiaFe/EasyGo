@@ -2,7 +2,6 @@ package ua.nure.easygo.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.databinding.generated.callback.OnClickListener;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,11 +22,12 @@ public class RegisterActivity extends Activity {
 
 
     private static final int REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration);
-        TextView addPhotoTextView=(TextView)findViewById(R.id.add_photo);
+        TextView addPhotoTextView = (TextView) findViewById(R.id.add_photo);
         addPhotoTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

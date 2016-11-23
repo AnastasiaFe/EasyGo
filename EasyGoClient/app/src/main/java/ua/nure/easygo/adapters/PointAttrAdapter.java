@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -69,7 +68,7 @@ public class PointAttrAdapter {
         switch (mapAttribute.type) {
             case INTEGER:
                 valueView = new EditText(v.getContext());
-                ((TextView)valueView).setSingleLine();
+                ((TextView) valueView).setSingleLine();
                 ((TextView) valueView).setInputType(InputType.TYPE_CLASS_NUMBER);
                 if (value != null)
                     ((TextView) valueView).setText(value.value);
@@ -83,7 +82,7 @@ public class PointAttrAdapter {
                 break;
             case STRING:
                 valueView = new EditText(v.getContext());
-                ((TextView)valueView).setSingleLine();
+                ((TextView) valueView).setSingleLine();
                 if (value != null)
                     ((TextView) valueView).setText(value.value);
                 ((TextView) valueView).setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -98,7 +97,7 @@ public class PointAttrAdapter {
                 break;
             case DOUBLE:
                 valueView = new EditText(v.getContext());
-                ((TextView)valueView).setSingleLine();
+                ((TextView) valueView).setSingleLine();
                 ((TextView) valueView).setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (value != null)
                     ((TextView) valueView).setText(value.value);

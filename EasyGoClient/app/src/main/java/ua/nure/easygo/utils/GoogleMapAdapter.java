@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,16 +25,19 @@ import ua.nure.easygo.rest.RestService;
 public class GoogleMapAdapter {
 
     private GoogleMap googleMap;
+    private List<Point> points;
 
     public GoogleMapAdapter(GoogleMap googleMap) {
+        points = new LinkedList<>();
         this.googleMap = googleMap;
     }
 
-    public Marker addPoint(GoogleMap googleMap, Point p, BitmapDescriptor icon) {
+    public Marker addPoint(Point p, BitmapDescriptor icon) {
 
+        points.add(p);
         LatLng sydney = new LatLng(p.x, p.y);
         return googleMap.addMarker(new MarkerOptions().position(sydney).title(p.name).icon(icon));
-        // googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
     }
 
     public void fill(MapsContext mapsContext) {
@@ -42,8 +46,12 @@ public class GoogleMapAdapter {
         }
     }
 
+    public List<Point> getPoints() {
+        return points;
+    }
+
     public void fill(final Map map) {
-        this.googleMap = googleMap;
+
         final BitmapDescriptor icon;
         if (map.icon == null) {
             icon = BitmapDescriptorFactory.defaultMarker();
@@ -55,7 +63,7 @@ public class GoogleMapAdapter {
             @Override
             public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
                 for (Point p : response.body()) {
-                    addPoint(googleMap, p, icon).setTag(p.pointId);
+                    addPoint(p, icon).setTag(p);
                 }
             }
 
@@ -65,5 +73,10 @@ public class GoogleMapAdapter {
             }
         });
 
+    }
+
+    public void clear() {
+        googleMap.clear();
+        points.clear();
     }
 }

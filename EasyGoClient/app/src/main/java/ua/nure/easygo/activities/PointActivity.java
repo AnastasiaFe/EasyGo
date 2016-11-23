@@ -3,6 +3,8 @@ package ua.nure.easygo.activities;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TableLayout;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -24,13 +26,15 @@ public class PointActivity extends AppCompatActivity {
 
 
     EasyGoService service;
-    boolean creating;
+
+    ActivityPointBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ActivityPointBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
         final TableLayout table;
         table = (TableLayout) findViewById(R.id.attr_list);
         service = RestService.get();
@@ -64,7 +68,6 @@ public class PointActivity extends AppCompatActivity {
                 }
             });
         } else {
-            creating = true;
             Point p = new Point();
             LatLng location = getIntent().getParcelableExtra(EXTRA_LOC);
             p.x = (float) location.latitude;
@@ -89,7 +92,6 @@ public class PointActivity extends AppCompatActivity {
         }
 
 
-
         //if (p.attributeValues != null) {
 
 /*        service.getMaps().enqueue(new Callback<MapList>() {
@@ -110,18 +112,44 @@ public class PointActivity extends AppCompatActivity {
         //!table.setAdapter(attrAdapter);
         //}
 
+        setSupportActionBar(binding.toolbar2);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.save) {
+            RestService.get().postPoint(binding.getPoint()).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        if (creating) {
-            setResult(RESULT_OK);
+
+        setResult(RESULT_OK);
             /*p.mapId = m.mapId;
             p.pointId = m.points.size();
             m.points.add(p);*/
-        }
 
     }
 }

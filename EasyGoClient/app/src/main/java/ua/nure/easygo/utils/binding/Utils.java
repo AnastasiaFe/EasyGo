@@ -15,7 +15,7 @@ import ua.nure.easygo.activities.MapInfoActivity;
 public class Utils {
     @BindingAdapter("bind:imageBitmap")
     public static void loadImage(ImageView iv, Bitmap bitmap) {
-        if(bitmap!=null) {
+        if (bitmap != null) {
             iv.setImageBitmap(bitmap);
         }
 
