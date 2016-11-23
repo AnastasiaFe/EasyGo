@@ -6,7 +6,6 @@ import ua.nure.easygo.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class for connection to MySQL database on localhost and running SELECT and
@@ -61,8 +60,8 @@ public class MySqlConnector {
 	 * @return list of columns
 	 * @throws SQLException
 	 */
-	public static synchronized List<User> selectUser(final String query) throws SQLException {
-		List<User> list = new ArrayList<>();
+	public static synchronized ArrayList<User> selectUser(final String query) throws SQLException {
+		ArrayList<User> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			statement = connection.createStatement();
@@ -89,8 +88,8 @@ public class MySqlConnector {
 	 * @return list of columns
 	 * @throws SQLException
 	 */
-	public static synchronized List<GoMap> selectGoMap(final String query) throws SQLException {
-		List<GoMap> list = new ArrayList<>();
+	public static synchronized ArrayList<GoMap> selectGoMap(final String query) throws SQLException {
+		ArrayList<GoMap> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			statement = connection.createStatement();
