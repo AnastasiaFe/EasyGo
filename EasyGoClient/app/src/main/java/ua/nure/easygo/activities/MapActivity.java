@@ -48,16 +48,15 @@ import retrofit2.Response;
 import ua.nure.easygo.LoginHelper;
 import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
-import ua.nure.easygo.model.MapList;
-import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener, MapsContext.MapsContextListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener, MapsContext.MapsContextListener {
 
-    public static final int REQUEST_MAPS = 1, REQUEST_POINT_ADDING = 2, REQUEST_MAP_FOR_ADDING_POINT = 3;
+    public static final int REQUEST_MAPS = 1, REQUEST_POINT_EDITING = 2, REQUEST_MAP_FOR_ADDING_POINT = 3;
     private static final int REQUEST_LOGIN = 4;
     Intent intAddPoint;
     NavHeaderMainBinding binding;
@@ -157,22 +156,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_POINT_ADDING) {
-            RestService.get().getMaps().enqueue(new Callback<MapList>() {
-                @Override
-                public void onResponse(Call<MapList> call, Response<MapList> response) {
-                    RestService.mapList = response.body();
-                    //mapsContext.replace(response.body().maps.get(0));
-
-                    new GoogleMapAdapter(mMap).fill(mapsContext);
-                }
-
-                @Override
-                public void onFailure(Call<MapList> call, Throwable t) {
-
-                }
-            });
-
+        if (requestCode == REQUEST_POINT_EDITING) {//need to invalidate point on map
+            syncMapWithMapsContext();
         }
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_MAPS) {
@@ -182,22 +167,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMaps().enqueue(new Callback<MapList>() {
+                        service.getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
-                            public void onResponse(Call<MapList> call, Response<MapList> response) {
-                                RestService.mapList = response.body();
-                                Map m = response.body().maps.get(mapId);
+                            public void onResponse(Call<Map> call, Response<Map> response) {
+                                Map m = response.body();
                                 try {
                                     mapsContext.add(m);
                                 } catch (MapsContext.MapAlreadyAddedException e) {
                                     e.printStackTrace();
-                                    onFailure(call, e);
                                 }
-
                             }
 
                             @Override
-                            public void onFailure(Call<MapList> call, Throwable t) {
+                            public void onFailure(Call<Map> call, Throwable t) {
                                 //TODO: add error handling
                             }
                         });
@@ -206,18 +188,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMaps().enqueue(new Callback<MapList>() {
+                        service.getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
-                            public void onResponse(Call<MapList> call, Response<MapList> response) {
+                            public void onResponse(Call<Map> call, Response<Map> response) {
                                 mMap.clear();
-                                RestService.mapList = response.body();
-                                Map m = response.body().maps.get(mapId);
+                                Map m = response.body();
                                 mapsContext.replace(m);
                                 //new GoogleMapAdapter(mMap).fill(m);
                             }
 
                             @Override
-                            public void onFailure(Call<MapList> call, Throwable t) {
+                            public void onFailure(Call<Map> call, Throwable t) {
                                 //TODO: add error handling
                             }
                         });
@@ -234,7 +215,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             } else if (requestCode == REQUEST_MAP_FOR_ADDING_POINT) {
 
                 intAddPoint.putExtra(PointActivity.EXTRA_MAP_ID, data.getIntExtra(MapsActivity.EXTRA_MAP_ID, 0));
-                startActivityForResult(intAddPoint, REQUEST_POINT_ADDING);
+                startActivityForResult(intAddPoint, REQUEST_POINT_EDITING);
             } else if (requestCode == REQUEST_LOGIN) {
 
 
@@ -302,11 +283,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
                 final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});
                 int i = 0;
-                for (Point p : mapsContext.getPoints()) {
+                /*for (Point p :
+                        mapsContext.getPoints()
+                        ) {
                     if (p.name.toLowerCase().contains(newText.toLowerCase())) {
                         c.addRow(new Object[]{i++, p});
                     }
-                }
+                }*/
+
+
                 cursorAdapter.changeCursor(c);
                 return false;
             }
@@ -348,14 +333,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return true;
     }
 
+    private void syncMapWithMapsContext() {
+        if (mMap != null) {
+            mMap.clear();
+        }
+        new GoogleMapAdapter(mMap).fill(mapsContext);
+    }
+
     @Override
     public void mapsContextChanged(final MapsContext mapsContext) {
         {
             //refresh points on the map
-            if (mMap != null) {
-                mMap.clear();
-            }
-            new GoogleMapAdapter(mMap).fill(mapsContext);
+            syncMapWithMapsContext();
 
             //refresh context strip
             ViewGroup viewGroup = (ViewGroup) findViewById(R.id.list_map_context);

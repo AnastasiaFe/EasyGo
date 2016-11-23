@@ -22,7 +22,7 @@ public class Utils {
     }
 
 
-    public static void showMapInfo(View v, int mapId) {
+    public static void showMapInfo(View v, long mapId) {
         Intent intent = new Intent(v.getContext(), MapInfoActivity.class);
         intent.putExtra(MapInfoActivity.EXTRA_MAP_ID, mapId);
         v.getContext().startActivity(intent);

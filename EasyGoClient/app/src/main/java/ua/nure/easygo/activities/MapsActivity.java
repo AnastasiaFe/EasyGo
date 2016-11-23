@@ -23,7 +23,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ua.nure.easygo.adapters.BaseBindableAdapter;
 import ua.nure.easygo.model.Map;
-import ua.nure.easygo.model.MapList;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.ArrayUtil;
@@ -50,7 +49,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         context.startActivityForResult(intent, requestCode);
     }
 
-    public static void startWithCertainMapList(Activity context, int requestCode, int[] mapIds, String title, boolean editing) {
+    public static void startWithCertainMapList(Activity context, int requestCode, long[] mapIds, String title, boolean editing) {
         Intent i = new Intent(context, MapsActivity.class);
         i.putExtra(EXTRA_TITLE, title);
         i.putExtra(EXTRA_EDITING, editing);
@@ -71,15 +70,14 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         service = RestService.get();
 
 
-        service.getMaps().enqueue(new Callback<MapList>() {
+        service.getMaps().enqueue(new Callback<List<Map>>() {
             @Override
-            public void onResponse(Call<MapList> call, Response<MapList> response) {
-                RestService.mapList = response.body();
-                List<Map> maps = response.body().maps;
+            public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
+                List<Map> maps = response.body();
                 if (getIntent().hasExtra(EXTRA_MAP_ITEMS)) {
-                    int[] ids = getIntent().getIntArrayExtra(EXTRA_MAP_ITEMS);
+                    long[] ids = getIntent().getLongArrayExtra(EXTRA_MAP_ITEMS);
                     maps = new LinkedList<>();
-                    for (Map m : response.body().maps) {
+                    for (Map m : response.body()) {
                         if (ArrayUtil.contains(ids, m.mapId)) {
                             maps.add(m);
                         }
@@ -102,7 +100,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             @Override
-            public void onFailure(Call<MapList> call, Throwable t) {
+            public void onFailure(Call<List<Map>> call, Throwable t) {
                 //TODO: Add error handling
             }
         });
@@ -137,15 +135,15 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CREATE_MAP) {
-            service.getMaps().enqueue(new Callback<MapList>() {
+            service.getMaps().enqueue(new Callback<List<Map>>() {
                 @Override
-                public void onResponse(Call<MapList> call, Response<MapList> response) {
-                    RestService.mapList = response.body();
-                    listView.setAdapter(new BaseBindableAdapter<Map>(MapsActivity.this, response.body().maps, R.layout.map_item, BR.map));
+                public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
+
+                    listView.setAdapter(new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map));
                 }
 
                 @Override
-                public void onFailure(Call<MapList> call, Throwable t) {
+                public void onFailure(Call<List<Map>> call, Throwable t) {
                     //TODO: Add error handling
                 }
             });

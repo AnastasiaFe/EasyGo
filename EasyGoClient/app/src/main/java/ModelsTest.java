@@ -1,16 +1,14 @@
-import android.databinding.tool.reflection.Callable;
-
 import com.google.gson.Gson;
+
+import java.sql.Array;
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ua.nure.easygo.model.MapList;
-import ua.nure.easygo.model.Point;
+
 import ua.nure.easygo.model.attributes.AttributeType;
-import ua.nure.easygo.model.attributes.AttributeValue;
 import ua.nure.easygo.model.attributes.MapAttribute;
-import ua.nure.easygo.rest.MockService;
 import ua.nure.easygo.rest.RestService;
 
 /**
@@ -20,20 +18,7 @@ import ua.nure.easygo.rest.RestService;
 public class ModelsTest {
     public static void main(String[] args) {
         final Gson g = new Gson();
-        Object o;
-
-        ((MockService)RestService.get()).getMaps().enqueue(new Callback<MapList>() {
-            @Override
-            public void onResponse(Call<MapList> call, Response<MapList> response) {
-                System.out.printf(g.toJson(response.body()));
-            }
-
-            @Override
-            public void onFailure(Call<MapList> call, Throwable t) {
-
-            }
-        });
-
-
+        Object o = Arrays.asList(new MapAttribute("name", AttributeType.STRING));
+        System.out.println(g.toJson(o));
     }
 }

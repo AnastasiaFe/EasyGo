@@ -8,7 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.nure.easygo.model.*;
+import ua.nure.easygo.model.GoMap;
+import ua.nure.easygo.model.Point;
+import ua.nure.easygo.model.User;
 
 /**
  * Class for connection to MySQL database on localhost and running SELECT and
@@ -64,14 +66,13 @@ public class MySqlConnector {
 	 * @throws SQLException
 	 */
 	public static synchronized List<User> selectUser(final String query) throws SQLException {
-		List<User> list = new ArrayList<>();
+		ArrayList<User> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			statement = connection.createStatement();
 			result = statement.executeQuery(query);
 			while (result.next()) {
-				list.add(new User(result.getInt(1), result.getString(2), result.getString(3), result.getString(4),
-						result.getString(5)));
+				list.add(new User(result.getString(1), result.getString(2), result.getString(3)));
 			}
 		} catch (SQLException sqlEx) {
 			sqlEx.printStackTrace();
@@ -92,14 +93,14 @@ public class MySqlConnector {
 	 * @throws SQLException
 	 */
 	public static synchronized List<GoMap> selectGoMap(final String query) throws SQLException {
-		List<GoMap> list = new ArrayList<>();
+		ArrayList<GoMap> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			statement = connection.createStatement();
 			result = statement.executeQuery(query);
 			while (result.next()) {
-				list.add(new GoMap(result.getInt(1), result.getInt(2), result.getString(3), result.getString(4),
-						result.getString(5), result.getString(5)));
+				list.add(new GoMap(result.getLong(1), result.getString(2), result.getString(3), result.getString(4),
+						result.getString(5), result.getBoolean(5)));
 			}
 		} catch (SQLException sqlEx) {
 			sqlEx.printStackTrace();
@@ -119,15 +120,15 @@ public class MySqlConnector {
 	 * @return list of columns
 	 * @throws SQLException
 	 */
-	public static synchronized List<Mark> selectMark(final String query) throws SQLException {
-		List<Mark> list = new ArrayList<>();
+	public static synchronized List<Point> selectPoint(final String query) throws SQLException {
+		ArrayList<Point> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			statement = connection.createStatement();
 			result = statement.executeQuery(query);
 			while (result.next()) {
-				list.add(new Mark(result.getInt(1), result.getDouble(2), result.getDouble(3), result.getString(4),
-						result.getInt(5), result.getString(5)));
+				list.add(new Point(result.getLong(1), result.getFloat(2), result.getFloat(3), result.getString(4),
+						result.getLong(5), result.getString(5)));
 			}
 		} catch (SQLException sqlEx) {
 			sqlEx.printStackTrace();
