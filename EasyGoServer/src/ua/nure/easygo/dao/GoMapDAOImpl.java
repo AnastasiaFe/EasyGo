@@ -112,4 +112,13 @@ public class GoMapDAOImpl implements GoMapDAO {
 			return null;
 		}
 	}
+	
+	public List<GoMap> getAllMaps() throws SQLException {
+		List<GoMap> maps = MySqlConnector.selectGoMap("select * from `gomaps`");
+		if (maps != null && maps.size() > 0) {
+			return maps;
+		} else {
+			return null;
+		}
+	}
 }
