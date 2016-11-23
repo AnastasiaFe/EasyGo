@@ -23,31 +23,22 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public User createUser(User user) {
+	public User createUser(User user) throws SQLException {
 		if (getUser(user.login) == null) {
 			final String queryInsert = "INSERT INTO " + DB_NAME + "." + TABLE_NAME + " (login, password, name) values '"
 					+ user.login + "','" + user.password + "','" + user.name + "';";
-			try {
-				MySqlConnector.execute(queryInsert);
-				return user;
-			} catch (SQLException e) {
-				e.printStackTrace();
-
-			}
+			MySqlConnector.execute(queryInsert);
+			return user;
 		}
 		// user already exists
 		return null;
 	}
 
 	@Override
-	public User getUser(String login) {
+	public User getUser(String login) throws SQLException {
 		final String query = "SELECT * from" + DB_NAME + "." + TABLE_NAME + " where login = '" + login + "';";
 		List<User> list = null;
-		try {
-			list = MySqlConnector.selectUser(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		list = MySqlConnector.selectUser(query);
 		if (list != null) {
 			// such user exists
 			return list.get(0);
@@ -56,37 +47,46 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public User updateUser(User user) {
+	public User updateUser(User user) throws SQLException {
 		if (getUser(user.login) != null) {
 			final String queryUpdate = String.format(
 					"UPDATE %s.%s SET login='%s', password='%s', name='%s' where login='%s'", DB_NAME, TABLE_NAME,
 					user.login, user.password, user.name, user.login);
 
-			try {
-				MySqlConnector.execute(queryUpdate);
-				return user;
-			} catch (SQLException e) {
-				e.printStackTrace();
-
-			}
+			MySqlConnector.execute(queryUpdate);
+			return user;
 		}
 
 		return null;
 	}
 
 	@Override
-	public boolean removeUser(String login) {
+	public boolean removeUser(String login) throws SQLException {
 		if (getUser(login) != null) {
 			final String queryDelete = String.format("REMOVE FROM %s.%s" + " where login='%s'", DB_NAME, TABLE_NAME,
 					login);
-			try {
-				MySqlConnector.execute(queryDelete);
-				return true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-
-			}
+			MySqlConnector.execute(queryDelete);
+			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean postUser(User user) throws Exception {
+		if (getUser(user.login) == null) {
+			try {
+				createUser(user);
+				return true;
+			} catch (Exception ex) {
+				return false;
+			}
+		} else {
+			try {
+				updateUser(user);
+				return true;
+			} catch (Exception ex) {
+				return false;
+			}
+		}
 	}
 }

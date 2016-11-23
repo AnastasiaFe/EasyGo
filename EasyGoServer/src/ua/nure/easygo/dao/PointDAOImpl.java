@@ -24,32 +24,25 @@ public class PointDAOImpl implements PointDAO {
 	}
 
 	@Override
-	public Point createPoint(Point point) {
+	public Point createPoint(Point point) throws SQLException {
 		// if no such point in DB
 		if (getPoint(point.pointId) == null) {
 			final String queryInsert = "INSERT INTO " + DB_NAME + "." + TABLE_NAME
 					+ " (x, y, name, map_id, attribute_values) values " + point.x + ", " + point.y + ", '" + point.name
 					+ "', " + point.mapId + ", '" + point.attributeValues + "';";
-			try {
-				MySqlConnector.execute(queryInsert);
-				return point;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+
+			MySqlConnector.execute(queryInsert);
+			return point;
 		}
 		// point already exists
 		return null;
 	}
 
 	@Override
-	public Point getPoint(long id) {
+	public Point getPoint(long id) throws SQLException {
 		final String query = "SELECT * from" + DB_NAME + "." + TABLE_NAME + " where point_id=" + id + ";";
 		List<Point> list = null;
-		try {
-			list = MySqlConnector.selectPoint(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		list = MySqlConnector.selectPoint(query);
 		if (list != null) {
 			// such point exists
 			return list.get(0);
@@ -59,36 +52,47 @@ public class PointDAOImpl implements PointDAO {
 	}
 
 	@Override
-	public Point updatePoint(Point point) {
+	public Point updatePoint(Point point) throws SQLException {
 		if (getPoint(point.pointId) != null) {
-
 			final String queryUpdate = String.format(
 					"UPDATE %s.%s SET x=%f, y=%f, name='%s', map_id=%d, attribute_values=%s where point_id=%d", DB_NAME,
 					TABLE_NAME, point.x, point.y, point.name, point.mapId, point.attributeValues, point.pointId);
-			try {
-				MySqlConnector.execute(queryUpdate);
-				return point;
-			} catch (SQLException e) {
-				e.printStackTrace();
 
-			}
+			MySqlConnector.execute(queryUpdate);
+			return point;
 		}
 		// point already exists
 		return null;
 	}
 
 	@Override
-	public boolean removePoint(long id) {
+	public boolean removePoint(long id) throws SQLException {
 		if (getPoint(id) != null) {
-			final String queryDelete = String.format("REMOVE FROM %s.%s" + " where point_id=%d", DB_NAME, TABLE_NAME, id);
-			try {
-				MySqlConnector.execute(queryDelete);
-				return true;
-			} catch (SQLException e) {
-				e.printStackTrace();
+			final String queryDelete = String.format("REMOVE FROM %s.%s" + " where point_id=%d", DB_NAME, TABLE_NAME,
+					id);
 
-			}
+			MySqlConnector.execute(queryDelete);
+			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean postPoint(Point point) throws Exception {
+		if (point.pointId == 0) {
+			try {
+				createPoint(point);
+				return true;
+			} catch (Exception ex) {
+				return false;
+			}
+		} else {
+			try {
+				updatePoint(point);
+				return true;
+			} catch (Exception ex) {
+				return false;
+			}
+		}
 	}
 }
