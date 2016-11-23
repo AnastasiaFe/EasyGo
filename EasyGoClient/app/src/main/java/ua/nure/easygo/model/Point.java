@@ -7,8 +7,6 @@ import ua.nure.easygo.model.attributes.AttributeValues;
  */
 
 public class Point {
-
-
     public float x, y;
     public String name;
     public long pointId;

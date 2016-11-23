@@ -48,6 +48,7 @@ import retrofit2.Response;
 import ua.nure.easygo.LoginHelper;
 import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
+import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
@@ -60,6 +61,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final int REQUEST_LOGIN = 4;
     Intent intAddPoint;
     NavHeaderMainBinding binding;
+    GoogleMapAdapter gAdapter;
     private GoogleMap mMap;
     private EasyGoService service;
     private MapsContext mapsContext;
@@ -124,6 +126,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
+        gAdapter = new GoogleMapAdapter(mMap);
+
         //
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
@@ -150,7 +154,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-
+        /*gAdapter.addPoint(new Point(1, 1, 10, "Nastya", null, 1), BitmapDescriptorFactory.defaultMarker());
+        gAdapter.addPoint(new Point(2, 2, 10, "HURE", null, 1), BitmapDescriptorFactory.defaultMarker());
+        gAdapter.addPoint(new Point(3, 3, 10, "Fedya", null, 1), BitmapDescriptorFactory.defaultMarker());
+        gAdapter.addPoint(new Point(4, 4, 10, "Churp", null, 1), BitmapDescriptorFactory.defaultMarker());*/
     }
 
 
@@ -191,10 +198,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         service.getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
                             public void onResponse(Call<Map> call, Response<Map> response) {
-                                mMap.clear();
+
                                 Map m = response.body();
                                 mapsContext.replace(m);
-                                //new GoogleMapAdapter(mMap).fill(m);
                             }
 
                             @Override
@@ -247,7 +253,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, PointActivity.class);
-        intent.putExtra(PointActivity.EXTRA_POINT_ID, (Integer) marker.getTag());
+        intent.putExtra(PointActivity.EXTRA_POINT_ID, ((Point) marker.getTag()).pointId);
         startActivity(intent);
     }
 
@@ -259,7 +265,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setQueryHint("Cafee");
-        final String[] from = new String[]{"cityName"};
+        final String[] from = new String[]{"point"};
         final int[] to = new int[]{android.R.id.text1};
         final CursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_1,
@@ -270,6 +276,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
         searchView.setSuggestionsAdapter(cursorAdapter);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -279,24 +286,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (mapsContext.isEmpty()) {
-                    return true;
+                    // return true;
                 }
-                final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "cityName"});
+                final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "point"});
+
                 int i = 0;
-                /*for (Point p :
-                        mapsContext.getPoints()
-                        ) {
-                    if (p.name.toLowerCase().contains(newText.toLowerCase())) {
-                        c.addRow(new Object[]{i++, p});
+                if (gAdapter != null) {
+                    for (Point p :
+                            gAdapter.getPoints()) {
+                        if (p.name.toLowerCase().contains(newText.toLowerCase())) {
+                            c.addRow(new Object[]{p.pointId, p.name});
+                        }
                     }
-                }*/
+                }
 
 
                 cursorAdapter.changeCursor(c);
                 return false;
             }
         });
-   /*     searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
 
@@ -306,11 +315,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public boolean onSuggestionClick(int position) {
 
-                //Point p = ((MatrixCursor)searchView.getSuggestionsAdapter().getItem(position)).getDouble();
-                //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(p.getX(), p.getY()),10)));
+                long pointId = ((MatrixCursor) searchView.getSuggestionsAdapter().getItem(position)).getLong(0);
+                //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(0, 0), 10)));
+                service.getPoint(pointId).enqueue(new Callback<Point>() {
+                    @Override
+                    public void onResponse(Call<Point> call, Response<Point> response) {
+                        Point p = response.body();
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(p.x, p.y), 10)));
+                    }
+
+                    @Override
+                    public void onFailure(Call<Point> call, Throwable t) {
+
+                    }
+                });
                 return false;
             }
-        });*/
+        });
         return true;
     }
 
@@ -327,17 +348,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
             case R.id.menu_settings:
-                Intent settingsIntent=new Intent(this,SettingsActivity.class);
-                startActivity(settingsIntent);
+               // Intent settingsIntent=new Intent(this,SettingsActivity.class);
+                //startActivity(settingsIntent);
+                break;
         }
         return true;
     }
 
     private void syncMapWithMapsContext() {
-        if (mMap != null) {
-            mMap.clear();
+        if (gAdapter != null) {
+            gAdapter.clear();
+            gAdapter.fill(mapsContext);
         }
-        new GoogleMapAdapter(mMap).fill(mapsContext);
     }
 
     @Override

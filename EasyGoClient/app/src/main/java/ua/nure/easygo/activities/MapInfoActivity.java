@@ -96,6 +96,7 @@ public class MapInfoActivity extends AppCompatActivity {
 
                 }
             });
+            finish();
         }
         return super.onOptionsItemSelected(item);
 

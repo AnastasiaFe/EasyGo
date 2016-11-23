@@ -8,6 +8,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
@@ -20,6 +21,13 @@ public interface EasyGoService {
     @GET("maps")
     Call<List<Map>> getMaps();
 
+    @GET("maps")
+    Call<List<Map>> searchMaps(@Query("query") String query);
+
+    @GET("maps")
+    Call<List<Map>> getMapsOfUser(@Query("user") String user);
+
+
     @GET("maps/{id}")
     Call<Map> getMap(@Path("id") long id);
 
@@ -31,6 +39,10 @@ public interface EasyGoService {
 
     @GET("users/{login}")
     Call<User> getUser(@Path("login") String login);
+
+
+    @GET("auth")
+    Call<String> getToken(@Query("login") String login, @Query("password") String password);
 
 
     @POST("maps")

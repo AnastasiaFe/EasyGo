@@ -1,12 +1,32 @@
+/*
 package ua.nure.easygo.rest;
 
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Path;
+import ua.nure.easygo.model.Map;
+import ua.nure.easygo.model.Point;
+import ua.nure.easygo.model.User;
+import ua.nure.easygo.model.attributes.AttributeValue;
+import ua.nure.easygo.model.attributes.AttributeValues;
+import ua.nure.easygo.model.attributes.MapAttribute;
+
+*/
 /**
  * Created by Oleg on 27.10.2016.
- */
-/*
+ *//*
+
+
 public class MockService implements EasyGoService {
 
-    static final MapList mapList;
+    static final List<Map> mapList;
     static final List<User> users;
 
     static {
@@ -15,9 +35,8 @@ public class MockService implements EasyGoService {
         users.add(new User("Nastya Fedorenko", "fedorenko@nure.ua", "123456", null));
 
 
-        mapList = new MapList(new LinkedList<Map>());
-        Map.id = 0;
-        Point.id = 0;
+        mapList = new LinkedList<Map>();
+
         mapList.maps.add(new Map(Arrays.asList(new Point(6, 3, "Nastya", new AttributeValues(Arrays.asList(new AttributeValue(0, "6.88"), new AttributeValue(1, "4"))), 0), new Point(50, 36, "kh", new AttributeValues(Arrays.asList(new AttributeValue(0, "3.45"))), 0)), "New map", BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.ic_delete), new MapAttributes(Arrays.asList(new MapAttribute("price", AttributeType.DOUBLE), new MapAttribute("Quality", AttributeType.RATING)))));
         Point.id = 0;
         mapList.maps.add(new Map(Arrays.asList(new Point(45, 13, "Hebvet", new AttributeValues(Arrays.asList(new AttributeValue(0, ""))), 1), new Point(50, 26, "mos", new AttributeValues(Arrays.asList(new AttributeValue(0, ""))), 1), new Point(12, 50, "hunf", new AttributeValues(Arrays.asList(new AttributeValue(0, ""))), 1)), "Simple map", BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.ic_dialog_alert), new MapAttributes(Arrays.asList(new MapAttribute("Date", AttributeType.DATE_TIME)))));
@@ -57,8 +76,23 @@ public class MockService implements EasyGoService {
     }
 
     @Override
+    public Call<Map> getMap(@Path("id") long id) {
+        return null;
+    }
+
+    @Override
+    public Call<List<Point>> getPoints(@Path("id") long mapId) {
+        return null;
+    }
+
+    @Override
+    public Call<Point> getPoint(@Path("id") long id) {
+        return null;
+    }
+
+    @Override
     public Call<String> saveMaps(MapList mapList) {
-      //  this.mapList = mapList;
+        //  this.mapList = mapList;
         return new BaseCall<>("Ok");
     }
 
@@ -72,6 +106,32 @@ public class MockService implements EasyGoService {
         return new BaseCall<>();
     }
 
+    @Override
+    public Call<Void> postMap(@Body Map map) {
+        return null;
+    }
+
+    @Override
+    public Call<Void> postPoint(@Body Point point) {
+        return null;
+    }
+
+    @Override
+    public Call<Void> postUser(@Body User user) {
+        return null;
+    }
+
+    @Override
+    public Call<Void> deletePoint(@Path("id") long id) {
+        return null;
+    }
+
+    @Override
+    public Call<Void> deleteMap(@Path("id") long id) {
+        return null;
+    }
+
 
 }
+
 */

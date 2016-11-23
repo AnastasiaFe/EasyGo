@@ -56,13 +56,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-
+    Context mContext = getApplicationContext();
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
-    Context  mContext = getApplicationContext();
-SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(mContext);
     // UI references.
     private AutoCompleteTextView mLoginView;
     private EditText mPasswordView;
@@ -187,7 +186,7 @@ SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(mCo
             cancel = true;
         } else if (!isLoginValid(login)) {
             mLoginView.setError(getString(R.string.error_invalid_login));
-            focusView =  mLoginView;
+            focusView = mLoginView;
             cancel = true;
         }
 
@@ -205,12 +204,12 @@ SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(mCo
     }
 
     private boolean isLoginValid(String login) {
-        return login.length()>=6;
+        return login.length() >= 6;
     }
 
     private boolean isPasswordValid(String password) {
 
-        return password.length() >=6;
+        return password.length() >= 6;
     }
 
     /**
