@@ -69,7 +69,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `EasyGoDB`;
-INSERT INTO `EasyGoDB`.`gomaps` (`map_id`, `owner_login`, `name`, `tags`, `map_attributes`, `isPrivate`) VALUES ('0', '0', 'ATMs', 'ATMs', 'look for this ATMs', true);
+INSERT INTO `EasyGoDB`.`gomaps` (`map_id`, `owner_login`, `name`, `tags`, `map_attributes`, `is_private`) VALUES ('0', '0', 'ATMs', 'ATMs', 'look for this ATMs', true);
 INSERT INTO `EasyGoDB`.`gomaps` (`owner_login`, `name`, `tags`, `map_attributes`, `is_private`) VALUES ('0', 'Coffee', 'Cup', 'look for this coffee', true);
 INSERT INTO `EasyGoDB`.`gomaps` (`owner_login`, `name`, `tags`, `map_attributes`, `is_private`) VALUES ('2', 'WaterAutomats', 'Water', 'look for this water', false);
 
