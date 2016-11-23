@@ -1,14 +1,12 @@
 package ua.nure.easygo.DBconnect;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import ua.nure.easygo.model.GoMap;
+import ua.nure.easygo.model.Mark;
+import ua.nure.easygo.model.User;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import ua.nure.easygo.model.*;
 
 /**
  * Class for connection to MySQL database on localhost and running SELECT and
@@ -119,8 +117,8 @@ public class MySqlConnector {
 	 * @return list of columns
 	 * @throws SQLException
 	 */
-	public static synchronized List<Mark> selectMark(final String query) throws SQLException {
-		List<Mark> list = new ArrayList<>();
+	public static synchronized ArrayList<Mark> selectMark(final String query) throws SQLException {
+		ArrayList<Mark> list = new ArrayList<>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			statement = connection.createStatement();
