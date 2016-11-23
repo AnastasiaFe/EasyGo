@@ -1,13 +1,7 @@
 package ua.nure.easygo.dao;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.nure.easygo.DBconnect.MySqlConnector;
 import ua.nure.easygo.model.GoMap;
@@ -15,24 +9,6 @@ import ua.nure.easygo.model.Point;
 import ua.nure.easygo.server.ServerUtils;
 
 public class GoMapDAOImpl implements GoMapDAO {
-	Map<String, GoMap> profsMap = new HashMap<String, GoMap>();
-	DataSource datasource;
-	private JdbcTemplate templMap;
-
-	public void setDataSource(DataSource dataSource) {
-		this.templMap = new JdbcTemplate(dataSource);
-	}
-
-	private GoMapDAO goMapDAO;
-
-	public GoMapDAO getGoMapDAO() {
-		return goMapDAO;
-	}
-
-	public void setmapsDAO(GoMapDAO mapsDAO) {
-		this.goMapDAO = mapsDAO;
-	}
-
 	@Override
 	public GoMap getMap(long mapId) throws SQLException {
 		List<GoMap> maps = MySqlConnector.selectGoMap("select * from `gomaps` where map_id = " + Long.toString(mapId));
@@ -101,9 +77,10 @@ public class GoMapDAOImpl implements GoMapDAO {
 
 	@Override
 	public boolean removeMap(long id) {
-		if (templMap.update("DELETE FROM maps WHERE map_id = '" + id + "'") > 0) {
+		try {
+			MySqlConnector.execute("DELETE FROM maps WHERE map_id = '" + id + "';");
 			return true;
-		} else {
+		} catch (Exception ex) {
 			return false;
 		}
 	}

@@ -17,6 +17,17 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 CREATE SCHEMA IF NOT EXISTS `EasyGoDB` DEFAULT CHARACTER SET utf8 ;
 USE `EasyGoDB` ;
 
+
+-- -----------------------------------------------------
+-- Table `EasyGoDB`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `EasyGoDB`.`users` (
+  `login` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`login`))
+ENGINE = InnoDB;
+
 -- -----------------------------------------------------
 -- Table `EasyGoDB`.`gomaps`
 -- -----------------------------------------------------
@@ -27,7 +38,11 @@ CREATE TABLE IF NOT EXISTS `EasyGoDB`.`gomaps` (
   `tags` VARCHAR(45) NOT NULL,
   `map_attributes` VARCHAR(45) NOT NULL,
   `is_private` TINYINT(1) NULL,
-  PRIMARY KEY (`map_id`))
+  PRIMARY KEY (`map_id`),
+    FOREIGN KEY (`owner_login`)
+    REFERENCES `EasyGoDB`.`users` (`login`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -49,26 +64,32 @@ CREATE TABLE IF NOT EXISTS `EasyGoDB`.`points` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `EasyGoDB`.`users`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `EasyGoDB`.`users` (
-  `login` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`login`))
-ENGINE = InnoDB;
-
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `EasyGoDB`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `EasyGoDB`;
+delete from `EasyGoDB`.`users`;
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olhaR', '0506909637', 'olha');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olehG', '1234', 'oleg');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('aleksS', '1234', 'alesks');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnnaN', '1234', 'anna');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IraP', '1234', 'ira');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnastasiaF', '1234', 'anastasia');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IhorK', '1234', 'ihor');
+
+COMMIT;
 
 -- -----------------------------------------------------
 -- Data for table `EasyGoDB`.`gomaps`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `EasyGoDB`;
+delete from `EasyGoDB`.`gomaps`;
 INSERT INTO `EasyGoDB`.`gomaps` (`map_id`, `owner_login`, `name`, `tags`, `map_attributes`, `is_private`) VALUES ('0', '0', 'ATMs', 'ATMs', 'look for this ATMs', true);
 INSERT INTO `EasyGoDB`.`gomaps` (`owner_login`, `name`, `tags`, `map_attributes`, `is_private`) VALUES ('0', 'Coffee', 'Cup', 'look for this coffee', true);
 INSERT INTO `EasyGoDB`.`gomaps` (`owner_login`, `name`, `tags`, `map_attributes`, `is_private`) VALUES ('2', 'WaterAutomats', 'Water', 'look for this water', false);
@@ -81,7 +102,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `EasyGoDB`;
-INSERT INTO `EasyGoDB`.`points` (`pointId`, `x`, `y`, `name`, `map_id`, `attribute_values`) VALUES ('0', 21331.3, 12321.2, 'Privat', '0', 'ATM');
+delete from `EasyGoDB`.`points`;
+INSERT INTO `EasyGoDB`.`points` (`point_id`, `x`, `y`, `name`, `map_id`, `attribute_values`) VALUES ('0', 21331.3, 12321.2, 'Privat', '0', 'ATM');
 INSERT INTO `EasyGoDB`.`points` (`x`, `y`, `name`, `map_id`, `attribute_values`) VALUES ( 12321, 2342, 'GasBank', '0', 'ATMGasBank');
 INSERT INTO `EasyGoDB`.`points` ( `x`, `y`, `name`, `map_id`, `attribute_values`) VALUES ( 1233, 3453, 'UniCredit', '0', 'ATMUniCredit');
 INSERT INTO `EasyGoDB`.`points` ( `x`, `y`, `name`, `map_id`, `attribute_values`) VALUES (1231, 3245, 'UniCredit', '0', 'ATMUniCredit2');
@@ -111,22 +133,6 @@ INSERT INTO `EasyGoDB`.`points` ( `x`, `y`, `name`, `map_id`, `attribute_values`
 INSERT INTO `EasyGoDB`.`points` (`x`, `y`, `name`, `map_id`, `attribute_values`) VALUES ( 234234, 23423, 'water6', '2', '70 k/l');
 INSERT INTO `EasyGoDB`.`points` ( `x`, `y`, `name`, `map_id`, `attribute_values`) VALUES (23434, 23423, 'water7', '2', NULL);
 INSERT INTO `EasyGoDB`.`points` (`x`, `y`, `name`, `map_id`, `attribute_values`) VALUES ( 2342, 234323, 'water8', '2', '72 k/l');
-
-COMMIT;
-
-
--- -----------------------------------------------------
--- Data for table `EasyGoDB`.`users`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `EasyGoDB`;
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olhaR', '0506909637', 'olha');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olehG', '1234', 'oleg');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('aleksS', '1234', 'alesks');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnnaN', '1234', 'anna');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IraP', '1234', 'ira');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnastasiaF', '1234', 'anastasia');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IhorK', '1234', 'ihor');
 
 COMMIT;
 

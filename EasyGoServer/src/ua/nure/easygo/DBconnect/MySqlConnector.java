@@ -22,7 +22,7 @@ import ua.nure.easygo.model.User;
 
 public class MySqlConnector {
 	// JDBC URL, username and password of MySQL server
-	private static final String URL = "jdbc:mysql://localhost:3306/stub";
+	private static final String URL = "jdbc:mysql://localhost:3306/easygodb";
 	private static final String USER = "root";
 	private static final String PASSWORD = "root";
 

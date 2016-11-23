@@ -68,7 +68,7 @@ public class PointDAOImpl implements PointDAO {
 	@Override
 	public boolean removePoint(long id) throws SQLException {
 		if (getPoint(id) != null) {
-			final String queryDelete = String.format("REMOVE FROM %s.%s" + " where point_id=%d", DB_NAME, TABLE_NAME,
+			final String queryDelete = String.format("delete FROM %s.%s" + " where point_id=%d", DB_NAME, TABLE_NAME,
 					id);
 
 			MySqlConnector.execute(queryDelete);

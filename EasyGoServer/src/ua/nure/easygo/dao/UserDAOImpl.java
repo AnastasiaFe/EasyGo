@@ -63,7 +63,7 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public boolean removeUser(String login) throws SQLException {
 		if (getUser(login) != null) {
-			final String queryDelete = String.format("REMOVE FROM %s.%s" + " where login='%s'", DB_NAME, TABLE_NAME,
+			final String queryDelete = String.format("delete FROM %s.%s" + " where login='%s'", DB_NAME, TABLE_NAME,
 					login);
 			MySqlConnector.execute(queryDelete);
 			return true;
