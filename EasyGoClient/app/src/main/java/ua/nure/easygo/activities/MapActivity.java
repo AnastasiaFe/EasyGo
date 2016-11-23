@@ -341,6 +341,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Intent loginIntent = new Intent(this, LoginActivity.class);
                 startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
+            case R.id.menu_settings:
+                Intent settingsIntent=new Intent(this,SettingsActivity.class);
+                startActivity(settingsIntent);
         }
         return true;
     }
