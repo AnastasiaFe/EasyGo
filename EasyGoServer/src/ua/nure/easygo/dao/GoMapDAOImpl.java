@@ -44,6 +44,25 @@ public class GoMapDAOImpl implements GoMapDAO {
 		}
 	}
 
+	@Override
+	public boolean postGoMap(GoMap map) throws SQLException {
+		if (map.mapId == 0) {
+			try {
+				createMap(map);
+				return true;
+			} catch (Exception ex) {
+				return false;
+			}
+		} else {
+			try {
+				updateMap(map);
+				return true;
+			} catch (Exception ex) {
+				return false;
+			}
+		}
+	}
+
 	public GoMap createMap(GoMap map) throws SQLException {
 		if (map != null) {
 			if (map.isPrivate) {
@@ -112,7 +131,7 @@ public class GoMapDAOImpl implements GoMapDAO {
 			return null;
 		}
 	}
-	
+
 	public List<GoMap> getAllMaps() throws SQLException {
 		List<GoMap> maps = MySqlConnector.selectGoMap("select * from `gomaps`");
 		if (maps != null && maps.size() > 0) {
