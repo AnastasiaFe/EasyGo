@@ -21,6 +21,16 @@ public class MarkDAO implements IMarkDAO {
 	public final int map_id;
 	public final String description;*/
 
+    private IMarkDAO markDAO;
+
+    public IMarkDAO getMarkDAO() {
+        return markDAO;
+    }
+
+    public void setMarkDAO(IMarkDAO markDAO) {
+        this.markDAO = markDAO;
+    }
+
 
     public Mark createMark(Mark mark){
        //no such mark in DB
@@ -43,7 +53,7 @@ public class MarkDAO implements IMarkDAO {
        return null;
     }
     public Mark getMark(int id){
-        final String query = "SELECT * from" + DB_NAME+"."+TABLE_NAME+" where id='"+mark.id+"';";
+        final String query = "SELECT * from" + DB_NAME+"."+TABLE_NAME+" where id='"+id+"';";
         ArrayList<Mark> list = new ArrayList<>();
         try {
             list = MySqlConnector.selectMark(query);}
@@ -57,7 +67,7 @@ public class MarkDAO implements IMarkDAO {
         return null;
     }
    public Mark updateMark(Mark mark){
-       if (getMark(mark.id)==null){
+       if (getMark(mark.id)!=null){
 
 
            final String queryUpdate = String.format("UPDATE %s.%s" +
@@ -77,15 +87,34 @@ public class MarkDAO implements IMarkDAO {
        return null;
    }
 
-    public  Mark changeMap(int newId){
-        return null;
-    }
+
 
    public boolean removeMark(int id) {
+       if (getMark(id)!=null){
+
+
+           final String queryDelete = String.format("REMOVE FROM %s.%s" +
+                           " where id=%d",
+                   DB_NAME,TABLE_NAME, id);
+           try {
+               MySqlConnector.execute(queryDelete);
+               return true;
+           }
+           catch(SQLException e) {
+               e.printStackTrace();
+
+           }}
         return false;
     }
     public List<Mark> getMarksList(String parameters) {
         List<Mark> list = new ArrayList<>();
+        final String querySelect = String.format("SELECT * FROM %s.%s",
+                DB_NAME,TABLE_NAME);
+        try{
+        list=MySqlConnector.selectMark(querySelect);}
+        catch (SQLException e){
+            e.printStackTrace();
+        }
         return list;
     }
 }

@@ -12,6 +12,6 @@ public interface IMarkDAO {
     Mark getMark(int id);
     Mark updateMark(Mark mark);
     boolean removeMark(int id);
-    Mark changeMap(int newId);
+
     List<Mark> getMarksList(String parameters);
 }
