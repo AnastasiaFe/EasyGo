@@ -22,14 +22,23 @@ import ua.nure.easygo.model.User;
 
 public class MySqlConnector {
 	// JDBC URL, username and password of MySQL server
-	private static final String URL = "jdbc:mysql://localhost:3306/easygodb";
 	private static final String USER = "root";
 	private static final String PASSWORD = "root";
+	private static final String URL = "jdbc:mysql://localhost:3306/easygodb?user=" + USER + "&password="
+			+ PASSWORD + "&useSSL=false";
 
 	// JDBC variables for opening and managing connection
 	private static Connection connection;
 	private static Statement statement;
 	private static ResultSet result;
+	
+	static {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Method for executing any SQL query except SELECT
@@ -47,7 +56,7 @@ public class MySqlConnector {
 			statement = connection.createStatement();
 
 			// executing query
-			result = statement.executeQuery(query);
+			statement.executeUpdate(query);
 		} catch (SQLException sqlEx) {
 			sqlEx.printStackTrace();
 		} finally {

@@ -2,6 +2,7 @@ package ua.nure.easygo.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 import ua.nure.easygo.DBconnect.MySqlConnector;
 import ua.nure.easygo.model.Point;
@@ -40,7 +41,7 @@ public class PointDAOImpl implements PointDAO {
 
 	@Override
 	public Point getPoint(long id) throws SQLException {
-		final String query = "SELECT * from" + DB_NAME + "." + TABLE_NAME + " where point_id=" + id + ";";
+		final String query = "SELECT * from " + DB_NAME + "." + TABLE_NAME + " where point_id=" + id + ";";
 		List<Point> list = null;
 		list = MySqlConnector.selectPoint(query);
 		if (list != null) {
@@ -54,8 +55,8 @@ public class PointDAOImpl implements PointDAO {
 	@Override
 	public Point updatePoint(Point point) throws SQLException {
 		if (getPoint(point.pointId) != null) {
-			final String queryUpdate = String.format(
-					"UPDATE %s.%s SET x=%f, y=%f, name='%s', map_id=%d, attribute_values=%s where point_id=%d", DB_NAME,
+			final String queryUpdate = String.format(Locale.US,
+					"UPDATE %s.%s SET x=%f, y=%f, name='%s', map_id=%d, attribute_values='%s' where point_id=%d", DB_NAME,
 					TABLE_NAME, point.x, point.y, point.name, point.mapId, point.attributeValues, point.pointId);
 
 			MySqlConnector.execute(queryUpdate);
@@ -68,8 +69,8 @@ public class PointDAOImpl implements PointDAO {
 	@Override
 	public boolean removePoint(long id) throws SQLException {
 		if (getPoint(id) != null) {
-			final String queryDelete = String.format("delete FROM %s.%s" + " where point_id=%d", DB_NAME, TABLE_NAME,
-					id);
+			final String queryDelete = String.format(Locale.US, "delete FROM %s.%s" + " where point_id=%d", DB_NAME,
+					TABLE_NAME, id);
 
 			MySqlConnector.execute(queryDelete);
 			return true;
@@ -94,5 +95,10 @@ public class PointDAOImpl implements PointDAO {
 				return false;
 			}
 		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		PointDAOImpl impl = new PointDAOImpl();
+		impl.postPoint(new Point(1L, 2.2f, 3.3f, "asd", 0, "val"));
 	}
 }
