@@ -46,13 +46,13 @@ public interface EasyGoService {
 
 
     @POST("maps")
-    Call<Void> postMap(@Body Map map);
+    Call<Boolean> postMap(@Body Map map);
 
     @POST("points")
-    Call<Void> postPoint(@Body Point point);
+    Call<Boolean> postPoint(@Body Point point);
 
     @POST("users")
-    Call<Void> postUser(@Body User user);
+    Call<Boolean> postUser(@Body User user);
 
 
     @DELETE("points/{id}")

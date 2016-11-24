@@ -169,7 +169,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_MAPS) {
                 drawer.closeDrawer(Gravity.LEFT);
-                final int mapId = data.getIntExtra(MapsActivity.EXTRA_MAP_ID, 0);
+                final long mapId = data.getLongExtra(MapsActivity.EXTRA_MAP_ID, 0);
 
                 new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
                     @Override
@@ -220,7 +220,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             } else if (requestCode == REQUEST_MAP_FOR_ADDING_POINT) {
 
-                intAddPoint.putExtra(PointActivity.EXTRA_MAP_ID, data.getIntExtra(MapsActivity.EXTRA_MAP_ID, 0));
+                intAddPoint.putExtra(PointActivity.EXTRA_MAP_ID, data.getLongExtra(MapsActivity.EXTRA_MAP_ID, 0));
                 startActivityForResult(intAddPoint, REQUEST_POINT_EDITING);
             } else if (requestCode == REQUEST_LOGIN) {
 

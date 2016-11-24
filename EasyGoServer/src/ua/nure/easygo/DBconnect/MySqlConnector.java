@@ -24,7 +24,7 @@ public class MySqlConnector {
 	// JDBC URL, username and password of MySQL server
 	private static final String URL = "jdbc:mysql://localhost:3306/easygodb";
 	private static final String USER = "root";
-	private static final String PASSWORD = "root";
+	private static final String PASSWORD = "wipole";
 
 	// JDBC variables for opening and managing connection
 	private static Connection connection;
@@ -47,7 +47,7 @@ public class MySqlConnector {
 			statement = connection.createStatement();
 
 			// executing query
-			result = statement.executeQuery(query);
+			 statement.executeUpdate(query);
 		} catch (SQLException sqlEx) {
 			sqlEx.printStackTrace();
 		} finally {
@@ -128,7 +128,7 @@ public class MySqlConnector {
 			result = statement.executeQuery(query);
 			while (result.next()) {
 				list.add(new Point(result.getLong(1), result.getFloat(2), result.getFloat(3), result.getString(4),
-						result.getLong(5), result.getString(5)));
+						result.getLong(5), result.getString(6)));
 			}
 		} catch (SQLException sqlEx) {
 			sqlEx.printStackTrace();

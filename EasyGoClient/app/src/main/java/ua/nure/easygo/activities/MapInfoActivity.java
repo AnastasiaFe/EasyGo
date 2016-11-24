@@ -39,7 +39,7 @@ public class MapInfoActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map_info);
 
         service = RestService.get();
-        final int mapId = getIntent().getIntExtra(EXTRA_MAP_ID, Constants.ID_NONE);
+        final long mapId = getIntent().getLongExtra(EXTRA_MAP_ID, Constants.ID_NONE);
         if (mapId != Constants.ID_NONE) {
 
             service.getMap(mapId).enqueue(new Callback<Map>() {
@@ -47,7 +47,7 @@ public class MapInfoActivity extends AppCompatActivity {
                 public void onResponse(Call<Map> call, Response<Map> response) {
                     binding.setMap(response.body());
 
-                    adapter = new MapAttributesAdapter(MapInfoActivity.this, response.body().mapAttributes);
+                    adapter = new MapAttributesAdapter(MapInfoActivity.this, response.body().mapAttributes.attributes);
                     binding.listAttributes.setAdapter(adapter);
                 }
 
@@ -59,7 +59,7 @@ public class MapInfoActivity extends AppCompatActivity {
 
         } else {
             binding.setMap(new Map());
-            adapter = new MapAttributesAdapter(MapInfoActivity.this, binding.getMap().mapAttributes);
+            adapter = new MapAttributesAdapter(MapInfoActivity.this, binding.getMap().mapAttributes.attributes);
             binding.listAttributes.setAdapter(adapter);
         }
 
@@ -69,7 +69,7 @@ public class MapInfoActivity extends AppCompatActivity {
         binding.buttonAddAttribute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.getMap().mapAttributes.add(new MapAttribute("new", AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
+                binding.getMap().mapAttributes.attributes.add(new MapAttribute("new", AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
                 binding.listAttributes.invalidateViews();
             }
         });
@@ -85,14 +85,14 @@ public class MapInfoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
-            service.postMap(binding.getMap()).enqueue(new Callback<Void>() {
+            service.postMap(binding.getMap()).enqueue(new Callback<Boolean>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
 
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(Call<Boolean> call, Throwable t) {
 
                 }
             });

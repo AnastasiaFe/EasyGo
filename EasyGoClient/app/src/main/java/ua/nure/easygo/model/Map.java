@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ua.nure.easygo.model.attributes.MapAttribute;
+import ua.nure.easygo.model.attributes.MapAttributes;
 
 /**
  * Created by Oleg on 18.10.2016.
@@ -13,18 +14,19 @@ import ua.nure.easygo.model.attributes.MapAttribute;
 
 public class Map {
 
-    public List<MapAttribute> mapAttributes;
+    public MapAttributes mapAttributes;
     public String name;
     public Bitmap icon;
     public long mapId;
-    public long ownerId;
+    public String ownerLogin;
     public boolean isPrivate;
+    public String tags;
 
     public Map() {
-        mapAttributes = new LinkedList<>();
+        mapAttributes = new MapAttributes();
     }
 
-    public Map(long mapId, String name, Bitmap icon, List<MapAttribute> mapAttributes) {
+    public Map(long mapId, String name, Bitmap icon, MapAttributes mapAttributes) {
 
         this.name = name;
         this.icon = icon;

@@ -39,9 +39,9 @@ public class PointActivity extends AppCompatActivity {
         table = (TableLayout) findViewById(R.id.attr_list);
         service = RestService.get();
 
-        int id = getIntent().getIntExtra(EXTRA_POINT_ID, -1);
+        long id = getIntent().getLongExtra(EXTRA_POINT_ID, -1);
 
-        if (id >= 0) {
+        if (id > 0) {
 
             service.getPoint(id).enqueue(new Callback<Point>() {
                 @Override
@@ -52,6 +52,7 @@ public class PointActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Map> call, Response<Map> response) {
                             binding.setMap(response.body());
+                            PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table);
                         }
 
                         @Override
@@ -68,8 +69,9 @@ public class PointActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Point p = new Point();
+            final Point p = new Point();
             LatLng location = getIntent().getParcelableExtra(EXTRA_LOC);
+
             p.x = (float) location.latitude;
             p.y = (float) location.longitude;
             binding.setPoint(p);
@@ -81,7 +83,8 @@ public class PointActivity extends AppCompatActivity {
 
 
                     binding.setMap(response.body());
-                    PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes, binding.getPoint().attributeValues, table);
+                    p.mapId = response.body().mapId;
+                    PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table);
                 }
 
                 @Override
@@ -119,18 +122,18 @@ public class PointActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
-            RestService.get().postPoint(binding.getPoint()).enqueue(new Callback<Void>() {
+            RestService.get().postPoint(binding.getPoint()).enqueue(new Callback<Boolean>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    finish();
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    finish();
                 }
             });
-            finish();
+
         }
         return super.onOptionsItemSelected(item);
     }

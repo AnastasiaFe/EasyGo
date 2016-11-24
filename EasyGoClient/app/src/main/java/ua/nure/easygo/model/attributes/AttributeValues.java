@@ -1,5 +1,6 @@
 package ua.nure.easygo.model.attributes;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class AttributeValues {
     }
 
     public AttributeValues() {
-        values = new LinkedList<>();
+        values = new ArrayList<>();
     }
 
     public void setValue(int attributeId, String value) {

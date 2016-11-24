@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
+
 
 import ua.nure.easygo.DBconnect.MySqlConnector;
 import ua.nure.easygo.model.Entity;
@@ -78,15 +78,7 @@ public class ServerUtils {
 		return maps;
 	}
 
-	public static synchronized String toJSON(ArrayList<Entity> list) {
-		Gson gson = new Gson();
-		StringBuilder sb = new StringBuilder();
-		for (Entity e : list) {
-			sb.append(gson.toJson(e));
 
-		}
-		return sb.toString();
-	}
 
 	/**
 	 * Changes {@link Point} in th db

@@ -2,6 +2,7 @@ package ua.nure.easygo.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 import ua.nure.easygo.DBconnect.MySqlConnector;
 import ua.nure.easygo.model.Point;
@@ -26,21 +27,21 @@ public class PointDAOImpl implements PointDAO {
 	@Override
 	public Point createPoint(Point point) throws SQLException {
 		// if no such point in DB
-		if (getPoint(point.pointId) == null) {
+		//if (getPoint(point.pointId) == null) {
 			final String queryInsert = "INSERT INTO " + DB_NAME + "." + TABLE_NAME
-					+ " (x, y, name, map_id, attribute_values) values " + point.x + ", " + point.y + ", '" + point.name
-					+ "', " + point.mapId + ", '" + point.attributeValues + "';";
+					+ " (x, y, name, map_id, attribute_values) values (" + point.x + ", " + point.y + ", '" + point.name
+					+ "', " + point.mapId + ", '" + point.attributeValues + "');";
 
 			MySqlConnector.execute(queryInsert);
 			return point;
-		}
+		//}
 		// point already exists
-		return null;
+		//return null;
 	}
 
 	@Override
 	public Point getPoint(long id) throws SQLException {
-		final String query = "SELECT * from" + DB_NAME + "." + TABLE_NAME + " where point_id=" + id + ";";
+		final String query = "SELECT * from " + DB_NAME + "." + TABLE_NAME + " where point_id=" + id +  ";";
 		List<Point> list = null;
 		list = MySqlConnector.selectPoint(query);
 		if (list != null) {
@@ -54,9 +55,9 @@ public class PointDAOImpl implements PointDAO {
 	@Override
 	public Point updatePoint(Point point) throws SQLException {
 		if (getPoint(point.pointId) != null) {
-			final String queryUpdate = String.format(
-					"UPDATE %s.%s SET x=%f, y=%f, name='%s', map_id=%d, attribute_values=%s where point_id=%d", DB_NAME,
-					TABLE_NAME, point.x, point.y, point.name, point.mapId, point.attributeValues, point.pointId);
+			final String queryUpdate = String.format(Locale.ENGLISH,
+					"UPDATE %s.%s SET x=%f, y=%f, name='%s', map_id=%d, attribute_values='%s' where point_id=%d;", DB_NAME,
+					TABLE_NAME, point.x, point.y, point.name, point.mapId, point.attributeValues==null?"":point.attributeValues, point.pointId);
 
 			MySqlConnector.execute(queryUpdate);
 			return point;
