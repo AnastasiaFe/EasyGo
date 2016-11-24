@@ -2,6 +2,7 @@ package ua.nure.easygo.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 import ua.nure.easygo.DBconnect.MySqlConnector;
 import ua.nure.easygo.model.User;
@@ -49,7 +50,7 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public User updateUser(User user) throws SQLException {
 		if (getUser(user.login) != null) {
-			final String queryUpdate = String.format(
+			final String queryUpdate = String.format(Locale.US,
 					"UPDATE %s.%s SET login='%s', password='%s', name='%s' where login='%s'", DB_NAME, TABLE_NAME,
 					user.login, user.password, user.name, user.login);
 
@@ -63,8 +64,8 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public boolean removeUser(String login) throws SQLException {
 		if (getUser(login) != null) {
-			final String queryDelete = String.format("delete FROM %s.%s" + " where login='%s'", DB_NAME, TABLE_NAME,
-					login);
+			final String queryDelete = String.format(Locale.US, "delete FROM %s.%s" + " where login='%s'", DB_NAME,
+					TABLE_NAME, login);
 			MySqlConnector.execute(queryDelete);
 			return true;
 		}
