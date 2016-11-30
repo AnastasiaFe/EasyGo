@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
+import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -51,6 +52,7 @@ import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
 import ua.nure.easygo.rest.EasyGoService;
+import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
 
@@ -348,8 +350,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
             case R.id.menu_settings:
-               // Intent settingsIntent=new Intent(this,SettingsActivity.class);
+                // Intent settingsIntent=new Intent(this,SettingsActivity.class);
                 //startActivity(settingsIntent);
+                break;
+            case R.id.menu_logout:
+                LoginHelper.getInstance().setCurrentUser(this, "", "");
+                finish();
+                startActivity(new Intent(this, MapActivity.class));
                 break;
         }
         return true;
@@ -374,10 +381,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             if (!mapsContext.isEmpty()) {
 
-                for (Map m : mapsContext.getMaps()) {
-                    View v = inflater.inflate(R.layout.map_context_item, viewGroup, false);
+                for (final Map m : mapsContext.getMaps()) {
+                    final View v = inflater.inflate(R.layout.map_context_item, viewGroup, false);
                     viewGroup.addView(v);
-                    ((ImageView) v.findViewById(R.id.image_map_icon)).setImageBitmap(m.icon);
+                    ImageService.getInstance().getBitmap(m.getIcon(), new ImageService.BitmapCallback() {
+                        @Override
+                        public void consumeBitmap(final Bitmap bmp) {
+                            v.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((ImageView) v.findViewById(R.id.image_map_icon)).setImageBitmap(bmp);
+                                }
+                            });
+
+                        }
+                    });
                     ((TextView) v.findViewById(R.id.text_map_name)).setText(m.name);
                     v.setTag(m);
                     v.setOnLongClickListener(new View.OnLongClickListener() {

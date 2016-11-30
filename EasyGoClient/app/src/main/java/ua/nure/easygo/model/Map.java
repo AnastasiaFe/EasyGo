@@ -1,11 +1,5 @@
 package ua.nure.easygo.model;
 
-import android.graphics.Bitmap;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import ua.nure.easygo.model.attributes.MapAttribute;
 import ua.nure.easygo.model.attributes.MapAttributes;
 
 /**
@@ -16,7 +10,6 @@ public class Map {
 
     public MapAttributes mapAttributes;
     public String name;
-    public Bitmap icon;
     public long mapId;
     public String ownerLogin;
     public boolean isPrivate;
@@ -26,12 +19,14 @@ public class Map {
         mapAttributes = new MapAttributes();
     }
 
-    public Map(long mapId, String name, Bitmap icon, MapAttributes mapAttributes) {
-
+    public Map(long mapId, String name, MapAttributes mapAttributes) {
         this.name = name;
-        this.icon = icon;
         this.mapAttributes = mapAttributes;
         this.mapId = mapId;
+    }
+
+    public String getIcon() {
+        return "map" + mapId;
     }
 
     /*

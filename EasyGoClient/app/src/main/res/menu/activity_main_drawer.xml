@@ -8,6 +8,9 @@
         android:id="@+id/menu_login"
         android:title="Log in"></item>
     <item
+        android:id="@+id/menu_logout"
+        android:title="Log out"></item>
+    <item
         android:id="@+id/menu_settings"
         android:title="Settings"></item>
 </menu>

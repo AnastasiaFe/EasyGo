@@ -4,20 +4,13 @@ public class User implements Entity {
     public String login;
     public String password;
     public String name;
-    //public Bitmap avatar;
 
-    /**
-     *
-     * @param name
-     * @param login
-     * @param password
-     * @param avatar can be null
-     */
+
     public User(String login, String password, String name) {
         this.name = name;
         this.login = login;
         this.password = password;
-        //this.avatar = avatar;
+
     }
 
     public User() {

@@ -1,5 +1,7 @@
 package ua.nure.easygo.utils;
 
+import android.graphics.Bitmap;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -16,6 +18,7 @@ import retrofit2.Response;
 import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
+import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 
 /**
@@ -52,26 +55,33 @@ public class GoogleMapAdapter {
 
     public void fill(final Map map) {
 
-        final BitmapDescriptor icon;
-        if (map.icon == null) {
-            icon = BitmapDescriptorFactory.defaultMarker();
-        } else {
-            icon = BitmapDescriptorFactory.fromBitmap(map.icon);
-        }
-
-        RestService.get().getPoints(map.mapId).enqueue(new Callback<List<Point>>() {
+        ImageService.getInstance().getBitmap(map.getIcon(), new ImageService.BitmapCallback() {
             @Override
-            public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
-                for (Point p : response.body()) {
-                    addPoint(p, icon).setTag(p);
+            public void consumeBitmap(Bitmap bmp) {
+                final BitmapDescriptor icon;
+                if (bmp == null) {
+                    icon = BitmapDescriptorFactory.defaultMarker();
+                } else {
+                    icon = BitmapDescriptorFactory.fromBitmap(bmp);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Point>> call, Throwable t) {
+                RestService.get().getPoints(map.mapId).enqueue(new Callback<List<Point>>() {
+                    @Override
+                    public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
+                        for (Point p : response.body()) {
+                            addPoint(p, icon).setTag(p);
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(Call<List<Point>> call, Throwable t) {
+
+                    }
+                });
             }
         });
+
+
 
     }
 

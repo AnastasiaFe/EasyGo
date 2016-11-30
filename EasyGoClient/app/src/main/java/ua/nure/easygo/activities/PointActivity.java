@@ -1,10 +1,12 @@
 package ua.nure.easygo.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TableLayout;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -25,18 +27,28 @@ public class PointActivity extends AppCompatActivity {
     public static final String EXTRA_POINT_ID = "point_id", EXTRA_MAP_ID = "map_id", EXTRA_LOC = "location";
 
 
+
     EasyGoService service;
 
     ActivityPointBinding binding;
 
+    boolean editing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        editing = RestService.authorised(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
         final TableLayout table;
         table = (TableLayout) findViewById(R.id.attr_list);
+
+        table.setEnabled(editing);
+        binding.textName.setEnabled(editing);
+
+
+
+
         service = RestService.get();
 
         long id = getIntent().getLongExtra(EXTRA_POINT_ID, -1);

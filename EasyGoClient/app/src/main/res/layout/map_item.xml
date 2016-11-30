@@ -21,7 +21,7 @@
         android:descendantFocusability="blocksDescendants">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageIcon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
@@ -46,7 +46,7 @@
             android:layout_centerVertical="false"
             android:layout_width="match_parent"
             android:layout_toStartOf="@+id/add"
-            android:layout_toEndOf="@+id/imageView"
+            android:layout_toEndOf="@+id/imageIcon"
             android:singleLine="true" />
 
         <ImageButton

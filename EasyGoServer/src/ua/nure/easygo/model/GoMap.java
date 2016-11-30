@@ -7,7 +7,7 @@ public class GoMap implements Entity {
     public String name;
     public String tags;
     public String mapAttributes;
-    //public Bitmap icon;
+
     public boolean isPrivate;
 
     public GoMap() {
@@ -20,6 +20,7 @@ public class GoMap implements Entity {
         this.tags = tags;
         this.mapAttributes = mapAttributes;
         this.isPrivate = isPrivate;
+
     }
 
     @Override

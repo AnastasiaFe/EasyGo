@@ -338,6 +338,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+RestService.authorise("token");
 
                 setResult(RESULT_OK);
                 LoginHelper.getInstance().setCurrentUser(LoginActivity.this, mLogin, mPassword);
