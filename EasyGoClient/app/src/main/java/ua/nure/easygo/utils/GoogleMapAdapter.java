@@ -82,11 +82,19 @@ public class GoogleMapAdapter {
         });
 
 
-
     }
 
     public void clear() {
         googleMap.clear();
         points.clear();
+    }
+
+    public long[] getPointsIds() {
+        long[] ids = new long[points.size()];
+        int i = 0;
+        for (Point p : points) {
+            ids[i++] = p.pointId;
+        }
+        return ids;
     }
 }

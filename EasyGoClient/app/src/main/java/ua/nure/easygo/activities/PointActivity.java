@@ -1,12 +1,10 @@
 package ua.nure.easygo.activities;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TableLayout;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -25,7 +23,6 @@ import ua.nure.easygo.rest.RestService;
 public class PointActivity extends AppCompatActivity {
 
     public static final String EXTRA_POINT_ID = "point_id", EXTRA_MAP_ID = "map_id", EXTRA_LOC = "location";
-
 
 
     EasyGoService service;
@@ -47,8 +44,6 @@ public class PointActivity extends AppCompatActivity {
         binding.textName.setEnabled(editing);
 
 
-
-
         service = RestService.get();
 
         long id = getIntent().getLongExtra(EXTRA_POINT_ID, -1);
@@ -64,7 +59,7 @@ public class PointActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Map> call, Response<Map> response) {
                             binding.setMap(response.body());
-                            PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table);
+                            PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table, !editing);
                         }
 
                         @Override
@@ -96,7 +91,7 @@ public class PointActivity extends AppCompatActivity {
 
                     binding.setMap(response.body());
                     p.mapId = response.body().mapId;
-                    PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table);
+                    PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table, !editing);
                 }
 
                 @Override
@@ -106,26 +101,6 @@ public class PointActivity extends AppCompatActivity {
             });
         }
 
-
-        //if (p.attributeValues != null) {
-
-/*        service.getMaps().enqueue(new Callback<MapList>() {
-            @Override
-            public void onResponse(Call<MapList> call, Response<MapList> response) {
-                Map m = response.body().maps.get(mapId);
-
-
-            }
-
-            @Override
-            public void onFailure(Call<MapList> call, Throwable t) {
-
-            }
-        });*/
-
-
-        //!table.setAdapter(attrAdapter);
-        //}
 
         setSupportActionBar(binding.toolbar2);
 
@@ -162,9 +137,6 @@ public class PointActivity extends AppCompatActivity {
 
 
         setResult(RESULT_OK);
-            /*p.mapId = m.mapId;
-            p.pointId = m.points.size();
-            m.points.add(p);*/
 
     }
 }

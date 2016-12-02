@@ -59,8 +59,8 @@ import ua.nure.easygo.utils.GoogleMapAdapter;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
         GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener, MapsContext.MapsContextListener {
 
-    public static final int REQUEST_MAPS = 1, REQUEST_POINT_EDITING = 2, REQUEST_MAP_FOR_ADDING_POINT = 3;
-    private static final int REQUEST_LOGIN = 4;
+    public static final int REQUEST_MAPS = 1, REQUEST_POINT_EDITING = 2,
+            REQUEST_MAP_FOR_ADDING_POINT = 3, REQUEST_LOGIN = 4, REQUEST_CHOOSE_MAP_FOR_MINING = 5;
     Intent intAddPoint;
     NavHeaderMainBinding binding;
     GoogleMapAdapter gAdapter;
@@ -69,6 +69,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapsContext mapsContext;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.filter_n_sort) {
+            MapsActivity.startWithFullMapList(this, REQUEST_CHOOSE_MAP_FOR_MINING, "Select map for mining", false);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -169,7 +178,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             syncMapWithMapsContext();
         }
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_MAPS) {
+            if (requestCode == REQUEST_CHOOSE_MAP_FOR_MINING) {
+                MiningActivity.start(this, data.getLongExtra(MapsActivity.EXTRA_MAP_ID, 0));
+            } else if (requestCode == REQUEST_MAPS) {
                 drawer.closeDrawer(Gravity.LEFT);
                 final long mapId = data.getLongExtra(MapsActivity.EXTRA_MAP_ID, 0);
 

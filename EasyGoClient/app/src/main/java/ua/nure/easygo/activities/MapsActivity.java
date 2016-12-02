@@ -194,7 +194,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
                 public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
                     List<Map> maps = response.body();
                     filterMaps(maps);
-                    adapter=new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map);
+                    adapter = new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map);
                     listView.setAdapter(adapter);
                 }
 

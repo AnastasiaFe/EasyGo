@@ -74,7 +74,7 @@ public class BaseBindableAdapter<T> implements ListAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         ViewDataBinding binding;
-        if (v == null) {
+        if (v == null ) {
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, parent, false);
             v = binding.getRoot();
 
