@@ -1,7 +1,6 @@
 package ua.nure.easygo.model.attributes;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -28,6 +27,14 @@ public class AttributeValues {
         }
         //if no value found
         values.add(new AttributeValue(attributeId, value));
+    }
 
+    public AttributeValue getValueOfAttribute(int attrIndex) {
+        for (AttributeValue v : values) {
+            if (v.attributeId == attrIndex) {
+                return v;
+            }
+        }
+        return null;
     }
 }
