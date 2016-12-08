@@ -27,8 +27,8 @@ public class UserDAOImpl implements UserDAO {
     public User createUser(User user) throws SQLException {
         if (getUser(user.login) == null) {
 
-            final String queryInsert = "INSERT INTO " + DB_NAME + "." + TABLE_NAME + " (login, password, name) values ('"
-                    + user.login + "','" + user.password + "','" + user.name + "');";
+            final String queryInsert = "INSERT INTO " + DB_NAME + "." + TABLE_NAME + " (login, password, name, avatar) values ('"
+                    + user.login + "','" + user.password + "','" + user.name + "','" + user.avatar + "');";
             MySqlConnector.execute(queryInsert);
             return user;
         }
@@ -52,8 +52,8 @@ public class UserDAOImpl implements UserDAO {
     public User updateUser(User user) throws SQLException {
         if (getUser(user.login) != null) {
             final String queryUpdate = String.format(Locale.US,
-                    "UPDATE %s.%s SET login='%s', password='%s', name='%s' where login='%s'", DB_NAME, TABLE_NAME,
-                    user.login, user.password, user.name,  user.login);
+                    "UPDATE %s.%s SET login='%s', password='%s', name='%s', avatar='%s' where login='%s'", DB_NAME, TABLE_NAME,
+                    user.login, user.password, user.name, user.avatar, user.login);
 
             MySqlConnector.execute(queryUpdate);
             return user;

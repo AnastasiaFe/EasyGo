@@ -12,6 +12,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 CREATE SCHEMA IF NOT EXISTS `EasyGoDB` DEFAULT CHARACTER SET utf8 ;
 USE `EasyGoDB` ;
 
+DROP TABLE `users`;
+DROP TABLE `gomaps`;
+DROP TABLE `points`;
 
 -- -----------------------------------------------------
 -- Table `EasyGoDB`.`users`
@@ -20,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `EasyGoDB`.`users` (
   `login` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
+  `avatar` VARCHAR(127),
   PRIMARY KEY (`login`))
 ENGINE = InnoDB;
 
@@ -30,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `EasyGoDB`.`users` (
   `login` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
+  `avatar` VARCHAR(127),
   PRIMARY KEY (`login`))
 ENGINE = InnoDB;
 
@@ -79,13 +84,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `EasyGoDB`;
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olhaR', '0506909637', 'olha');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olehG', '1234', 'oleg');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('aleksS', '1234', 'alesks');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnnaN', '1234', 'anna');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IraP', '1234', 'ira');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnastasiaF', '1234', 'anastasia');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IhorK', '1234', 'ihor');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olhaR', '0506909637', 'olha', '#');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olehG', '1234', 'oleg', '#');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('aleksS', '1234', 'alesks', '#');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnnaN', '1234', 'anna', '#');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IraP', '1234', 'ira', '#');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnastasiaF', '1234', 'anastasia', '#');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IhorK', '1234', 'ihor', '#');
 
 COMMIT;
 

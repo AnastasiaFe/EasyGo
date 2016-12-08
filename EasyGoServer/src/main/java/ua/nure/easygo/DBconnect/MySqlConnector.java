@@ -79,7 +79,7 @@ public class MySqlConnector {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
             while (result.next()) {
-                list.add(new User(result.getString(1), result.getString(2), result.getString(3)));
+                list.add(new User(result.getString(1), result.getString(2), result.getString(3), result.getString(4)));
             }
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
