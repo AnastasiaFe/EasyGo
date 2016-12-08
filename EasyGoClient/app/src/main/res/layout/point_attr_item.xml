@@ -8,6 +8,6 @@
     <TextView
         android:layout_height="wrap_content"
         android:id="@+id/text_attr_name"
-        tools:text="Attr name"
+        tools:text="@string/attr_name"
         android:layout_width="wrap_content" />
 </TableRow>

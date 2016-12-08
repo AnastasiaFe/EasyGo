@@ -39,7 +39,7 @@
             android:layout_marginTop="15dp"
 
 
-            tools:text="Map name"
+            tools:text="@string/Map_name"
             android:text="@{map.name}"
 
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"

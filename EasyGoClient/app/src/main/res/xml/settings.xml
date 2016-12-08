@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    >
-    <ListPreference
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-        android:entries="@array/languages"
-        android:entryValues="@array/languages"
-        android:key="lang"
-        android:title="Select a language">
-    </ListPreference>
+        <EditTextPreference
+            android:name="EditText Preference"
+            android:summary="@string/summary"
+            android:defaultValue="192.168.43.13:8080"
+            android:title="@string/ip"
+            android:key="editIPPref" />
+
 </PreferenceScreen>

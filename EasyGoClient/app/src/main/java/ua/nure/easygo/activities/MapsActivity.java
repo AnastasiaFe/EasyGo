@@ -111,7 +111,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         String title = getIntent().getStringExtra(EXTRA_TITLE);
-        getSupportActionBar().setTitle(title == null ? "Maps list" : title);
+        getSupportActionBar().setTitle(title == null ? getString(R.string.list) : title);
     }
 
 
