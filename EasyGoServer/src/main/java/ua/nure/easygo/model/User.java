@@ -4,14 +4,14 @@ public class User implements Entity {
     public String login;
     public String password;
     public String name;
-    public String avatar;
+    public String role;
 
 
-    public User(String login, String password, String name, String avatar) {
+    public User(String login, String password, String name, String role) {
         this.name = name;
         this.login = login;
         this.password = password;
-        this.avatar = avatar;
+	this.role = role;
     }
 
     public User() {
