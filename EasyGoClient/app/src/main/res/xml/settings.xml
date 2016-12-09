@@ -4,7 +4,7 @@
         <EditTextPreference
             android:name="EditText Preference"
             android:summary="@string/summary"
-            android:defaultValue="192.168.43.13:8080"
+            android:defaultValue="http://192.168.43.13:8080/"
             android:title="@string/ip"
             android:key="editIPPref" />
 

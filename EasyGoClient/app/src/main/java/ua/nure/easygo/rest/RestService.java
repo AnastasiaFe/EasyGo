@@ -1,7 +1,9 @@
 package ua.nure.easygo.rest;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.http.HttpResponseCache;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -32,7 +34,8 @@ import ua.nure.easygo.model.attributes.MapAttributes;
 public class RestService {
 
     private final static boolean USE_MOCK = false;
-    static final String SERVER_URL = "http://192.168.43.13:8080/";
+   // static final String SERVER_URL = "http://192.168.43.13:8080/";
+    static String SERVER_URL;
     private static String token = "";
     private static EasyGoService service;
 
@@ -43,6 +46,8 @@ public class RestService {
 
     public static void init(Context context)
     {
+        SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(context);
+        SERVER_URL=preferences.getString("editIPPref","http://192.168.43.13:8080/");
         if (service == null) {
 
             File httpCacheDirectory = new File(context.getCacheDir(), "responses");
@@ -120,4 +125,7 @@ public class RestService {
         RestService.token = token;
 
     }
+
+
+
 }
