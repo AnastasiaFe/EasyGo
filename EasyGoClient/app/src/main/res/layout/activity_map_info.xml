@@ -35,19 +35,21 @@
 
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/imageIcon"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 app:srcCompat="@color/colorAccent"
-                bind:imageBitmap="@{map.icon}" />
+                bind:imageBitmap="@{map.icon}"
+                android:foreground="@android:drawable/ic_menu_report_image"
+                android:foregroundGravity="bottom|right" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView2"
+                android:layout_below="@+id/imageIcon"
                 android:orientation="vertical">
 
             </LinearLayout>
@@ -62,8 +64,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_toRightOf="@+id/imageView2"
-                android:layout_toEndOf="@+id/imageView2" />
+                android:layout_toRightOf="@+id/imageIcon"
+                android:layout_toEndOf="@+id/imageIcon" />
 
             <CheckBox
                 android:id="@+id/checkBox"
@@ -72,8 +74,8 @@
                 android:checked="@={map.isPrivate}"
                 android:text="@string/private_map"
                 android:layout_below="@+id/textView2"
-                android:layout_toRightOf="@+id/imageView2"
-                android:layout_toEndOf="@+id/imageView2" />
+                android:layout_toRightOf="@+id/imageIcon"
+                android:layout_toEndOf="@+id/imageIcon" />
         </RelativeLayout>
 
         <TableRow
@@ -95,7 +97,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/imageView2" />
+            android:layout_below="@+id/imageIcon" />
     </LinearLayout>
 
 </layout>

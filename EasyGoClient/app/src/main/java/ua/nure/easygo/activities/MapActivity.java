@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
+import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -51,14 +52,15 @@ import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
 import ua.nure.easygo.rest.EasyGoService;
+import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
         GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener, MapsContext.MapsContextListener {
 
-    public static final int REQUEST_MAPS = 1, REQUEST_POINT_EDITING = 2, REQUEST_MAP_FOR_ADDING_POINT = 3;
-    private static final int REQUEST_LOGIN = 4;
+    public static final int REQUEST_MAPS = 1, REQUEST_POINT_EDITING = 2,
+            REQUEST_MAP_FOR_ADDING_POINT = 3, REQUEST_LOGIN = 4, REQUEST_CHOOSE_MAP_FOR_MINING = 5;
     Intent intAddPoint;
     NavHeaderMainBinding binding;
     GoogleMapAdapter gAdapter;
@@ -67,6 +69,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapsContext mapsContext;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.filter_n_sort) {
+            MapsActivity.startWithFullMapList(this, REQUEST_CHOOSE_MAP_FOR_MINING, "Select map for mining", false);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -167,7 +178,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             syncMapWithMapsContext();
         }
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_MAPS) {
+            if (requestCode == REQUEST_CHOOSE_MAP_FOR_MINING) {
+                MiningActivity.start(this, data.getLongExtra(MapsActivity.EXTRA_MAP_ID, 0));
+            } else if (requestCode == REQUEST_MAPS) {
                 drawer.closeDrawer(Gravity.LEFT);
                 final long mapId = data.getLongExtra(MapsActivity.EXTRA_MAP_ID, 0);
 
@@ -348,8 +361,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
             case R.id.menu_settings:
-               // Intent settingsIntent=new Intent(this,SettingsActivity.class);
+                // Intent settingsIntent=new Intent(this,SettingsActivity.class);
                 //startActivity(settingsIntent);
+                break;
+            case R.id.menu_logout:
+                LoginHelper.getInstance().setCurrentUser(this, "", "");
+                finish();
+                startActivity(new Intent(this, MapActivity.class));
                 break;
         }
         return true;
@@ -374,10 +392,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             if (!mapsContext.isEmpty()) {
 
-                for (Map m : mapsContext.getMaps()) {
-                    View v = inflater.inflate(R.layout.map_context_item, viewGroup, false);
+                for (final Map m : mapsContext.getMaps()) {
+                    final View v = inflater.inflate(R.layout.map_context_item, viewGroup, false);
                     viewGroup.addView(v);
-                    ((ImageView) v.findViewById(R.id.image_map_icon)).setImageBitmap(m.icon);
+                    ImageService.getInstance().getBitmap(m.getIcon(), new ImageService.BitmapCallback() {
+                        @Override
+                        public void consumeBitmap(final Bitmap bmp) {
+                            v.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((ImageView) v.findViewById(R.id.image_map_icon)).setImageBitmap(bmp);
+                                }
+                            });
+
+                        }
+                    });
                     ((TextView) v.findViewById(R.id.text_map_name)).setText(m.name);
                     v.setTag(m);
                     v.setOnLongClickListener(new View.OnLongClickListener() {

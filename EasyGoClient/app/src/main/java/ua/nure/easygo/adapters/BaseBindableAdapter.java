@@ -25,6 +25,7 @@ public class BaseBindableAdapter<T> implements ListAdapter {
     public BaseBindableAdapter(Context context, List<T> items, @LayoutRes int layoutId, int bindVariableId) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.items = items;
+
         this.layoutId = layoutId;
         this.bindVariableId = bindVariableId;
     }
@@ -73,7 +74,7 @@ public class BaseBindableAdapter<T> implements ListAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         ViewDataBinding binding;
-        if (v == null) {
+        if (v == null ) {
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, parent, false);
             v = binding.getRoot();
 

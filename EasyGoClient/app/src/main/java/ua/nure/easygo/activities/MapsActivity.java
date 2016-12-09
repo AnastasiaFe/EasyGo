@@ -22,6 +22,7 @@ import easygo.nure.ua.easygoclient.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ua.nure.easygo.LoginHelper;
 import ua.nure.easygo.adapters.BaseBindableAdapter;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.rest.EasyGoService;
@@ -40,7 +41,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     EasyGoService service;
     ListView listView;
     ListAdapter adapter;
-    private boolean editing, searching;
+    private boolean editing, searching = true;
 
     public static void startWithFullMapList(Activity context, int requestCode, String title, boolean editing) {
 
@@ -59,12 +60,24 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         context.startActivityForResult(i, requestCode);
     }
 
+    private void filterMaps(List<Map> maps) {
+        String u = LoginHelper.getInstance().getLogin(this);
+        for (int i = 0; i < maps.size(); i++) {
+            Map map = maps.get(i);
+            if (map.isPrivate && !map.ownerLogin.equals(u)) {
+                maps.remove(i);
+                i--;
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        editing = getIntent().getBooleanExtra(EXTRA_EDITING, true);
+        editing = getIntent().getBooleanExtra(EXTRA_EDITING, true) && RestService.authorised(this);
+
 
         listView = (ListView) findViewById(R.id.list_maps);
 
@@ -75,16 +88,17 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
                 List<Map> maps = response.body();
+                filterMaps(maps);
                 if (getIntent().hasExtra(EXTRA_MAP_ITEMS)) {
                     long[] ids = getIntent().getLongArrayExtra(EXTRA_MAP_ITEMS);
-                    maps = new LinkedList<>();
-                    for (Map m : response.body()) {
+                    List<Map> t = new LinkedList<>();
+                    for (Map m : maps) {
                         if (ArrayUtil.contains(ids, m.mapId)) {
-                            maps.add(m);
+                            t.add(m);
                         }
                     }
+                    maps = t;
                 }
-
                 adapter = new BaseBindableAdapter<Map>(MapsActivity.this, maps, R.layout.map_item, BR.map) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
@@ -140,7 +154,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
                         @Override
                         public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
                             List<Map> maps = response.body();
-
+                            filterMaps(response.body());
                             adapter = new BaseBindableAdapter<Map>(MapsActivity.this, maps, R.layout.map_item, BR.map) {
                                 @Override
                                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -172,14 +186,16 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CREATE_MAP) {
             service.getMaps().enqueue(new Callback<List<Map>>() {
                 @Override
                 public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
-
-                    listView.setAdapter(new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map));
+                    List<Map> maps = response.body();
+                    filterMaps(maps);
+                    adapter = new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map);
+                    listView.setAdapter(adapter);
                 }
 
                 @Override

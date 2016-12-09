@@ -5,6 +5,9 @@ package ua.nure.easygo.model.attributes;
  */
 
 public class AttributeValue {
+    /**
+     *  Index of corresponding map attribute
+     */
     public int attributeId;
     public String value;
 

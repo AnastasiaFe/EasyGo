@@ -34,6 +34,9 @@ public interface EasyGoService {
     @GET("maps/{id}/points")
     Call<List<Point>> getPoints(@Path("id") long mapId);
 
+    @POST("pointsids")
+    Call<List<Point>> getPoints(@Body long[] ids);
+
     @GET("points/{id}")
     Call<Point> getPoint(@Path("id") long id);
 

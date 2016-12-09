@@ -18,8 +18,6 @@ import easygo.nure.ua.easygoclient.R;
 import ua.nure.easygo.model.attributes.AttributeValue;
 import ua.nure.easygo.model.attributes.AttributeValues;
 import ua.nure.easygo.model.attributes.MapAttribute;
-import ua.nure.easygo.rest.EasyGoService;
-import ua.nure.easygo.rest.RestService;
 
 /**
  * Created by Oleg on 02.11.2016.
@@ -29,17 +27,17 @@ public class PointAttrAdapter {
 
 
     private final List<MapAttribute> mapAttributes;
+    private final boolean onlyRead;
     LayoutInflater layoutInflater;
-    EasyGoService service;
     AttributeValues values;
 
-    public PointAttrAdapter(Context context, List<MapAttribute> mapAttributes, AttributeValues values, TableLayout root) {
+    public PointAttrAdapter(Context context, List<MapAttribute> mapAttributes, AttributeValues values, TableLayout root, boolean onlyRead) {
 
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mapAttributes = mapAttributes;
         this.values = values;
-        service = RestService.get();
-
+        this.onlyRead = onlyRead;
+        root.removeAllViews();
         for (int i = 0; i < mapAttributes.size(); i++) {
             root.addView(getView(i, root));
         }
@@ -122,11 +120,15 @@ public class PointAttrAdapter {
                 break;
         }
         if (valueView != null) {
+
             TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(16, 0, 16, 0);
             //  params.weight=0;
 
             ((ViewGroup) v).addView(valueView, params);
+            if (onlyRead) {
+                valueView.setEnabled(false);
+            }
         }
 
 

@@ -1,6 +1,9 @@
 package ua.nure.easygo.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,22 +12,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import easygo.nure.ua.easygoclient.R;
 import easygo.nure.ua.easygoclient.databinding.ActivityMapInfoBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ua.nure.easygo.Constants;
+import ua.nure.easygo.LoginHelper;
 import ua.nure.easygo.adapters.MapAttributesAdapter;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.attributes.AttributeType;
 import ua.nure.easygo.model.attributes.MapAttribute;
 import ua.nure.easygo.rest.EasyGoService;
+import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
+import ua.nure.easygo.utils.Logger;
 
 public class MapInfoActivity extends AppCompatActivity {
 
     public static final String EXTRA_MAP_ID = "map_id";
+    private static final int REQUEST_SELECT_ICON = 1;
     EasyGoService service;
 
 
@@ -37,6 +47,15 @@ public class MapInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map_info);
+        binding.imageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select icon"), REQUEST_SELECT_ICON);
+            }
+        });
 
         service = RestService.get();
         final long mapId = getIntent().getLongExtra(EXTRA_MAP_ID, Constants.ID_NONE);
@@ -59,6 +78,7 @@ public class MapInfoActivity extends AppCompatActivity {
 
         } else {
             binding.setMap(new Map());
+            binding.getMap().ownerLogin = LoginHelper.getInstance().getLogin(this);
             adapter = new MapAttributesAdapter(MapInfoActivity.this, binding.getMap().mapAttributes.attributes);
             binding.listAttributes.setAdapter(adapter);
         }
@@ -73,6 +93,24 @@ public class MapInfoActivity extends AppCompatActivity {
                 binding.listAttributes.invalidateViews();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_SELECT_ICON) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                Bitmap icon = BitmapFactory.decodeStream(inputStream);
+                ImageService.getInstance().uploadBitmap(icon, binding.getMap().getIcon());
+                binding.imageIcon.setImageBitmap(icon);
+            } catch (FileNotFoundException e) {
+                Logger.toast(this, e.getMessage());
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override

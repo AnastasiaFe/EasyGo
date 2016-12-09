@@ -6,28 +6,28 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.EditText;
 
-
-
-
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import easygo.nure.ua.easygoclient.R;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ua.nure.easygo.model.User;
+import ua.nure.easygo.rest.RestService;
 
 
 public class RegisterActivity extends Activity {
 
-View registerForm;
+    View registerForm;
     View progressBar;
-EditText mLogin;
-    EditText mPassword,mEmail;
+    EditText mLogin;
+    EditText mPassword, mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +35,8 @@ EditText mLogin;
         setContentView(R.layout.registration);
 
         mPassword = (EditText) findViewById(R.id.password);
-        mLogin=(EditText)findViewById(R.id.login);
-        mEmail=(EditText)findViewById(R.id.email);
+        mLogin = (EditText) findViewById(R.id.login);
+        mEmail = (EditText) findViewById(R.id.email);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -47,10 +47,8 @@ EditText mLogin;
         });
 
         registerForm = findViewById(R.id.login_form);
-       progressBar = findViewById(R.id.login_progress);
+        progressBar = findViewById(R.id.login_progress);
     }
-
-
 
 
     /**
@@ -59,19 +57,19 @@ EditText mLogin;
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegister() {
-       /** if (mAuthTask != null) {
-            return;
-        }*/
+        /** if (mAuthTask != null) {
+         return;
+         }*/
 
         // Reset errors.
-       mLogin.setError(null);
+        mLogin.setError(null);
         mPassword.setError(null);
         mEmail.setError(null);
 
         // Store values at the time of the login attempt.
         String login = mLogin.getText().toString();
         String password = mPassword.getText().toString();
-        String email=mEmail.getText().toString();
+        String email = mEmail.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -84,12 +82,11 @@ EditText mLogin;
         }
 
         // Check for a valid email address.
-         if (!isLoginValid(login)) {
+        if (!isLoginValid(login)) {
             mLogin.setError(getString(R.string.error_invalid_login));
-            focusView =  mLogin;
+            focusView = mLogin;
             cancel = true;
         }
-
 
 
         if (cancel) {
@@ -100,17 +97,33 @@ EditText mLogin;
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            User user = new User(email, login, password);
+
+                RestService.get().postUser(user).enqueue(new Callback<Boolean>() {
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+
+                    }
+                });
+
+            finish();
+
 
         }
     }
 
     private boolean isLoginValid(String login) {
-        return login.length()>=6;
+        return login.length() >= 3;
     }
 
     private boolean isPasswordValid(String password) {
 
-        return password.length() >=6;
+        return password.length() >= 6;
     }
 
     /**
@@ -148,14 +161,6 @@ EditText mLogin;
             registerForm.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

@@ -29,14 +29,21 @@ public class PointActivity extends AppCompatActivity {
 
     ActivityPointBinding binding;
 
+    boolean editing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        editing = RestService.authorised(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_point);
         final TableLayout table;
         table = (TableLayout) findViewById(R.id.attr_list);
+
+        table.setEnabled(editing);
+        binding.textName.setEnabled(editing);
+
+
         service = RestService.get();
 
         long id = getIntent().getLongExtra(EXTRA_POINT_ID, -1);
@@ -52,7 +59,7 @@ public class PointActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Map> call, Response<Map> response) {
                             binding.setMap(response.body());
-                            PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table);
+                            PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table, !editing);
                         }
 
                         @Override
@@ -84,7 +91,7 @@ public class PointActivity extends AppCompatActivity {
 
                     binding.setMap(response.body());
                     p.mapId = response.body().mapId;
-                    PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table);
+                    PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table, !editing);
                 }
 
                 @Override
@@ -94,26 +101,6 @@ public class PointActivity extends AppCompatActivity {
             });
         }
 
-
-        //if (p.attributeValues != null) {
-
-/*        service.getMaps().enqueue(new Callback<MapList>() {
-            @Override
-            public void onResponse(Call<MapList> call, Response<MapList> response) {
-                Map m = response.body().maps.get(mapId);
-
-
-            }
-
-            @Override
-            public void onFailure(Call<MapList> call, Throwable t) {
-
-            }
-        });*/
-
-
-        //!table.setAdapter(attrAdapter);
-        //}
 
         setSupportActionBar(binding.toolbar2);
 
@@ -150,9 +137,6 @@ public class PointActivity extends AppCompatActivity {
 
 
         setResult(RESULT_OK);
-            /*p.mapId = m.mapId;
-            p.pointId = m.points.size();
-            m.points.add(p);*/
 
     }
 }

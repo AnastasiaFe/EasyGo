@@ -1,7 +1,12 @@
 package ua.nure.easygo.model.attributes;
 
 /**
- * Created by Oleg on 28.10.2016.
+ * Represents data types for map attributes
+ * INTEGER      int
+ * STRING       String
+ * DATE_TIME    Date
+ * DOUBLE       Double
+ * RATING       int (usually in range [1-5], number of stars)
  */
 
 public enum AttributeType {

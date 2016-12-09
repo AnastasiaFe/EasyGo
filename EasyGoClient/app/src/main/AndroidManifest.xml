@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
+        android:name="ua.nure.easygo.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -52,10 +53,14 @@
         <activity android:name="ua.nure.easygo.activities.MapInfoActivity" />
         <activity
             android:name="ua.nure.easygo.activities.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
-
-        <activity android:name="ua.nure.easygo.activities.RegisterActivity" android:label="Registration"/>
-<activity android:name="ua.nure.easygo.activities.SettingsActivity" android:label="Settings"/>
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name="ua.nure.easygo.activities.RegisterActivity"
+            android:label="Registration" />
+        <activity
+            android:name="ua.nure.easygo.activities.SettingsActivity"
+            android:label="Settings" />
+        <activity android:name="ua.nure.easygo.activities.MiningActivity"></activity>
     </application>
 
 </manifest>

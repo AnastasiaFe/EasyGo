@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import ua.nure.easygo.activities.MapInfoActivity;
+import ua.nure.easygo.rest.ImageService;
 
 /**
  * Created by Oleg on 19.10.2016.
@@ -14,10 +15,20 @@ import ua.nure.easygo.activities.MapInfoActivity;
 
 public class Utils {
     @BindingAdapter("bind:imageBitmap")
-    public static void loadImage(ImageView iv, Bitmap bitmap) {
-        if (bitmap != null) {
-            iv.setImageBitmap(bitmap);
-        }
+    public static void loadImage(final ImageView iv, String icon) {
+
+        ImageService.getInstance().getBitmap(icon, new ImageService.BitmapCallback() {
+            @Override
+            public void consumeBitmap(final Bitmap bmp) {
+                iv.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        iv.setImageBitmap(bmp);
+                    }
+                });
+            }
+        });
+
 
     }
 
