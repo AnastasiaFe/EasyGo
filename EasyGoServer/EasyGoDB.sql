@@ -8,9 +8,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 CREATE SCHEMA IF NOT EXISTS `EasyGoDB` DEFAULT CHARACTER SET utf8 ;
 USE `EasyGoDB` ;
 
-DROP TABLE `points`;
-DROP TABLE `gomaps`;
-DROP TABLE `users`;
 
 -- -----------------------------------------------------
 -- Table `EasyGoDB`.`users`
@@ -68,13 +65,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `EasyGoDB`;
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olhaR', '0506909637', 'olha', 'admin');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('olehG', '1234', 'oleg', 'admin');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('aleksS', '1234', 'alesks', 'admin');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnnaN', '1234', 'anna', 'user');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IraP', '1234', 'ira', 'user');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('AnastasiaF', '1234', 'anastasia', 'user');
-INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`) VALUES ('IhorK', '1234', 'ihor', 'user');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`, `role`) VALUES ('olhaR', '0506909637', 'olha', 'admin');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`, `role`) VALUES ('olehG', '1234', 'oleg', 'admin');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`, `role`) VALUES ('aleksS', '1234', 'alesks', 'admin');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`, `role`) VALUES ('AnnaN', '1234', 'anna', 'user');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`, `role`) VALUES ('IraP', '1234', 'ira', 'user');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`, `role`) VALUES ('AnastasiaF', '1234', 'anastasia', 'user');
+INSERT INTO `EasyGoDB`.`users` (`login`, `password`, `name`, `role`) VALUES ('IhorK', '1234', 'ihor', 'user');
 
 COMMIT;
 
