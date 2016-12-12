@@ -39,7 +39,7 @@
                     android:id="@+id/login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Login"
+                    android:hint="@string/login_hint"
                     android:inputType="text"
                     android:maxLines="1"
                     />
@@ -50,17 +50,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
+                    android:hint="@string/pass_hint"
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -70,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/title_activity_login"
+                android:text="@string/action_sign_in_short"
                 android:textStyle="bold" />
 
 
@@ -82,7 +83,7 @@
 
                 <TextView
 
-                    android:text="Do not have an account yet?"
+                    android:text="@string/no_account"
                     android:layout_width="wrap_content"
                     android:id="@+id/textview1"
                     android:layout_height="wrap_content"
@@ -91,7 +92,7 @@
                 <TextView
 
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="Register"
+                    android:text="@string/register"
                     android:id="@+id/registerLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

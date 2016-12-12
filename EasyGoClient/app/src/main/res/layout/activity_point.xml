@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="Name" />
+                        android:text="@string/name" />
 
 
                     <EditText
@@ -80,7 +80,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_alignStart="@+id/tableLayout"
                         android:text="@={point.name}"
-                        tools:text="Name" />
+                        tools:text="@string/name" />
 
                 </TableRow>
 
@@ -93,7 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="Location" />
+                        android:text="@string/location" />
 
                     <TextView
                         android:id="@+id/text_loc"
@@ -103,7 +103,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_alignStart="@+id/tableLayout"
                         android:text="@{point.loc}"
-                        tools:text="location" />
+                        tools:text="@string/location" />
                 </TableRow>
 
 

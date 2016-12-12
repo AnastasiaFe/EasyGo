@@ -53,6 +53,7 @@ import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
+import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
@@ -66,7 +67,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     NavHeaderMainBinding binding;
     GoogleMapAdapter gAdapter;
     private GoogleMap mMap;
-
+    private EasyGoService service;
     private MapsContext mapsContext;
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -202,7 +203,7 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
                 new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
+                        service.getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
                             public void onResponse(Call<Map> call, Response<Map> response) {
                                 Map m = response.body();
@@ -223,7 +224,7 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
                 }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
+                        service.getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
                             public void onResponse(Call<Map> call, Response<Map> response) {
 
@@ -345,7 +346,7 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
 
                 long pointId = ((MatrixCursor) searchView.getSuggestionsAdapter().getItem(position)).getLong(0);
                 //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(0, 0), 10)));
-                RestService.get().getPoint(pointId).enqueue(new Callback<Point>() {
+                service.getPoint(pointId).enqueue(new Callback<Point>() {
                     @Override
                     public void onResponse(Call<Point> call, Response<Point> response) {
                         Point p = response.body();
@@ -376,21 +377,8 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
                 startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
             case R.id.menu_settings:
-                final TextView ip = new TextView(this);
-
-                AlertDialog d = new AlertDialog.Builder(this).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String s = ip.getText().toString();
-                        RestService.init(MapActivity.this, s);
-                    }
-                }).create();
-
-
-                d.setContentView(ip);
-                d.show();
-                // Intent settingsIntent=new Intent(this,SettingsActivity.class);
-                //startActivity(settingsIntent);
+               Intent settingsIntent=new Intent(this,SettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
             case R.id.menu_logout:
                 LoginHelper.getInstance().setCurrentUser(this, "", "");

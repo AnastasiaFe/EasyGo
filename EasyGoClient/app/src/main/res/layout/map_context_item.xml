@@ -16,7 +16,7 @@
         android:padding="4dp" />
 
     <TextView
-        android:text="map_name"
+        android:text="@string/map_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text_map_name"

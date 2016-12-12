@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@={map.name}"
-                bind:text="Map"
+                bind:text="@string/map"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="@={map.isPrivate}"
-                android:text="private map"
+                android:text="@string/private_map"
                 android:layout_below="@+id/textView2"
                 android:layout_toRightOf="@+id/imageIcon"
                 android:layout_toEndOf="@+id/imageIcon" />
@@ -85,7 +85,7 @@
             android:gravity="right">
 
             <Button
-                android:text="Add attribute"
+                android:text="@string/add_attr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_add_attribute" />

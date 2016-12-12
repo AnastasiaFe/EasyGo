@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/menu_maps"
-        android:title="Maps"></item>
+        android:title="@string/maps"></item>
     <item
         android:id="@+id/menu_login"
-        android:title="Log in"></item>
+        android:title="@string/login"></item>
     <item
         android:id="@+id/menu_logout"
         android:title="Log out"></item>
     <item
         android:id="@+id/menu_settings"
-        android:title="Settings"></item>
+        android:title="@string/action_settings"></item>
 </menu>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:text="Click 'Add' to add map to the context"
+    tools:text="@string/text_add_map"
     android:textAppearance="@style/TextAppearance.AppCompat.Medium">
 
 </TextView>

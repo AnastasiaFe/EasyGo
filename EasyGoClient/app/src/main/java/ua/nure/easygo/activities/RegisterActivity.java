@@ -86,10 +86,6 @@ public class RegisterActivity extends Activity {
             mLogin.setError(getString(R.string.error_invalid_login));
             focusView = mLogin;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmail.setError("Incorrect email format.");
-            focusView = mEmail;
-            cancel = true;
         }
 
 
@@ -121,17 +117,8 @@ public class RegisterActivity extends Activity {
         }
     }
 
-    private boolean isEmailValid(String email) {
-        String emailValid = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        Pattern pattern = Pattern.compile(emailValid);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-
-    }
-
     private boolean isLoginValid(String login) {
-        return login.length() >= 6;
+        return login.length() >= 3;
     }
 
     private boolean isPasswordValid(String password) {

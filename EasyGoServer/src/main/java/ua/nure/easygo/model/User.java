@@ -6,13 +6,14 @@ public class User implements Entity {
     public String login;
     public String password;
     public String name;
+    public String role;
 
 
-    public User(String login, String password, String name) {
+    public User(String login, String password, String name, String role) {
         this.name = name;
         this.login = login;
         this.password = password;
-
+	this.role = role;
     }
 
     public User() {
