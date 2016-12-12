@@ -11,12 +11,14 @@ package ua.nure.easygo.model.attributes;
 
 public enum AttributeType {
     //DON`T CHANGE NAMES!!
-    INTEGER("Integer"), STRING("Text"), DATE_TIME("Time"), DOUBLE("Real"), RATING("Rating");
+    INTEGER("Integer", true), STRING("Text", false), DATE_TIME("Time", true), DOUBLE("Real", true), RATING("Rating", true);
 
     public final String typeName;
+    public final boolean filterable;
 
-    AttributeType(String typeName) {
+    AttributeType(String typeName, boolean filterable) {
         this.typeName = typeName;
+        this.filterable = filterable;
     }
 
 

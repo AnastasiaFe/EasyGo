@@ -91,13 +91,21 @@
                 android:id="@+id/button_add_attribute" />
         </TableRow>
 
-        <ListView
-            android:id="@+id/list_attributes"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/imageIcon" />
+            android:id="@+id/attrs_scroll">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:id="@+id/map_attributes"></LinearLayout>
+
+
+        </ScrollView>
+
     </LinearLayout>
 
 </layout>

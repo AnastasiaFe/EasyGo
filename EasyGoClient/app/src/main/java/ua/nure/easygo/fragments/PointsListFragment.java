@@ -12,12 +12,8 @@ import android.widget.ListView;
 import java.util.List;
 
 import easygo.nure.ua.easygoclient.R;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import ua.nure.easygo.adapters.PointsAdapter;
 import ua.nure.easygo.model.Point;
-import ua.nure.easygo.rest.RestService;
 
 
 public class PointsListFragment extends Fragment {
@@ -46,20 +42,11 @@ public class PointsListFragment extends Fragment {
 
     }
 
-    public void setPointsIds(long... ids) {
-        RestService.get().getPoints(ids).enqueue(new Callback<List<Point>>() {
-            @Override
-            public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
+    public void setPoints(List<Point> points) {
 
-                adapter = new PointsAdapter(getActivity(), response.body());
-                ls.setAdapter(adapter);
-            }
+        adapter = new PointsAdapter(getActivity(), points);
+        ls.setAdapter(adapter);
 
-            @Override
-            public void onFailure(Call<List<Point>> call, Throwable t) {
-
-            }
-        });
     }
 
     @Override

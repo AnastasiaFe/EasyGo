@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -38,7 +37,7 @@ public class MapInfoActivity extends AppCompatActivity {
     EasyGoService service;
 
 
-    ListAdapter adapter;
+    MapAttributesAdapter adapter;
 
     ActivityMapInfoBinding binding;
 
@@ -66,8 +65,8 @@ public class MapInfoActivity extends AppCompatActivity {
                 public void onResponse(Call<Map> call, Response<Map> response) {
                     binding.setMap(response.body());
 
-                    adapter = new MapAttributesAdapter(MapInfoActivity.this, response.body().mapAttributes.attributes);
-                    binding.listAttributes.setAdapter(adapter);
+                    adapter = new MapAttributesAdapter(binding.mapAttributes, response.body().mapAttributes.attributes);
+
                 }
 
                 @Override
@@ -79,8 +78,8 @@ public class MapInfoActivity extends AppCompatActivity {
         } else {
             binding.setMap(new Map());
             binding.getMap().ownerLogin = LoginHelper.getInstance().getLogin(this);
-            adapter = new MapAttributesAdapter(MapInfoActivity.this, binding.getMap().mapAttributes.attributes);
-            binding.listAttributes.setAdapter(adapter);
+            adapter = new MapAttributesAdapter(binding.mapAttributes, binding.getMap().mapAttributes.attributes);
+
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -90,7 +89,8 @@ public class MapInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 binding.getMap().mapAttributes.attributes.add(new MapAttribute("new", AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
-                binding.listAttributes.invalidateViews();
+                adapter = new MapAttributesAdapter(binding.mapAttributes, binding.getMap().mapAttributes.attributes);
+                binding.attrsScroll.fullScroll(View.FOCUS_DOWN);
             }
         });
     }

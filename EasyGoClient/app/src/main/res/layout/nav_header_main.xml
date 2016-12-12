@@ -12,7 +12,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@drawable/side_nav_bar">
+        android:background="@drawable/side_nav_bar"
+        android:id="@+id/nav_header"
+        >
 
         <TextView
             android:id="@+id/text_login"

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/min"
+        android:numStars="5"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:isIndicator="false" />
+
+    <TextView
+        android:text=" - "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:layout_weight="0" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/max"
+        android:numStars="5"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:isIndicator="false" />
+</LinearLayout>

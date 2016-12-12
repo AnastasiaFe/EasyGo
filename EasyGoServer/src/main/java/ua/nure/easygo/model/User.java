@@ -1,5 +1,7 @@
 package ua.nure.easygo.model;
 
+import com.mysql.jdbc.PreparedStatement;
+
 public class User implements Entity {
     public String login;
     public String password;

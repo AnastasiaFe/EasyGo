@@ -20,14 +20,18 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import easygo.nure.ua.easygoclient.R;
+import ua.nure.easygo.fragments.FilterFragment;
 import ua.nure.easygo.fragments.PointsListFragment;
+import ua.nure.easygo.mining.FilterParam;
+import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.rest.RestService;
 
-public class MiningActivity extends AppCompatActivity {
+public class MiningActivity extends AppCompatActivity implements FilterFragment.OnFilterChangedListener {
 
     public static final String EXTRA_MAP_ID = "map_id";
     List<Point> points;
+    Map map;
     PointsListFragment pointsListFragment;
 
     public static void start(Context c, long mapId) {
@@ -35,6 +39,8 @@ public class MiningActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MAP_ID, mapId);
         c.startActivity(intent);
     }
+
+    PointsListFragment list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class MiningActivity extends AppCompatActivity {
                 protected Void doInBackground(Void... params) {
                     try {
                         points = RestService.get().getPoints(mapId).execute().body();
+                        map = RestService.get().getMap(mapId).execute().body();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -67,7 +74,13 @@ public class MiningActivity extends AppCompatActivity {
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(final int position) {
-                return new Frag();
+                switch (position) {
+                    case 0:
+                        return FilterFragment.get(map.mapAttributes);
+                    case 1:
+                        return new Frag();
+                }
+                return null;
             }
 
             @Override
@@ -87,6 +100,21 @@ public class MiningActivity extends AppCompatActivity {
                 return 2;
             }
         });
+
+        list = new PointsListFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame, list).commit();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        list.setPoints(points);
+    }
+
+    @Override
+    public void onFilterChanged(List<FilterParam> filters) {
 
     }
 

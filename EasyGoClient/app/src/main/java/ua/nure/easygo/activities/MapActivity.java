@@ -41,6 +41,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import easygo.nure.ua.easygoclient.R;
 import easygo.nure.ua.easygoclient.databinding.NavHeaderMainBinding;
 import retrofit2.Call;
@@ -51,7 +53,6 @@ import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
-import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
@@ -65,7 +66,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     NavHeaderMainBinding binding;
     GoogleMapAdapter gAdapter;
     private GoogleMap mMap;
-    private EasyGoService service;
+
     private MapsContext mapsContext;
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -75,12 +76,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        ButterKnife.bind(this);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
         //TODO:stub
-        service = RestService.get();
+
 
         mapsContext = new MapsContext();
 
@@ -111,7 +114,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             onActivityResult(REQUEST_LOGIN, RESULT_OK, null);
         }
 
+navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        ProfileActivity.start(MapActivity.this);
+    }
+});
+    }
 
+
+    public void showProfile() {
+        // if (!LoginHelper.getInstance().getLogin(this).isEmpty()) {
+
+        //}
     }
 
     @Override
@@ -187,7 +202,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                        RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
                             public void onResponse(Call<Map> call, Response<Map> response) {
                                 Map m = response.body();
@@ -208,7 +223,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                        RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
                             public void onResponse(Call<Map> call, Response<Map> response) {
 
@@ -330,7 +345,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 long pointId = ((MatrixCursor) searchView.getSuggestionsAdapter().getItem(position)).getLong(0);
                 //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(0, 0), 10)));
-                service.getPoint(pointId).enqueue(new Callback<Point>() {
+                RestService.get().getPoint(pointId).enqueue(new Callback<Point>() {
                     @Override
                     public void onResponse(Call<Point> call, Response<Point> response) {
                         Point p = response.body();
@@ -361,6 +376,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
             case R.id.menu_settings:
+                final TextView ip = new TextView(this);
+
+                AlertDialog d = new AlertDialog.Builder(this).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String s = ip.getText().toString();
+                        RestService.init(MapActivity.this, s);
+                    }
+                }).create();
+
+
+                d.setContentView(ip);
+                d.show();
                 // Intent settingsIntent=new Intent(this,SettingsActivity.class);
                 //startActivity(settingsIntent);
                 break;

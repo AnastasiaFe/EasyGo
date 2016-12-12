@@ -12,6 +12,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        RestService.init(this);
+        RestService.init(this, null);
     }
 }
