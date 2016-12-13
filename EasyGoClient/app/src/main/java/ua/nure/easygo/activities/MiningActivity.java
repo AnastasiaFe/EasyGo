@@ -4,16 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,12 +17,15 @@ import java.util.concurrent.ExecutionException;
 import easygo.nure.ua.easygoclient.R;
 import ua.nure.easygo.fragments.FilterFragment;
 import ua.nure.easygo.fragments.PointsListFragment;
+import ua.nure.easygo.fragments.SortFragment;
 import ua.nure.easygo.mining.FilterParam;
+import ua.nure.easygo.mining.SortingInfo;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.rest.RestService;
+import ua.nure.easygo.utils.Logger;
 
-public class MiningActivity extends AppCompatActivity implements FilterFragment.OnFilterChangedListener {
+public class MiningActivity extends AppCompatActivity implements FilterFragment.OnFilterChangedListener, SortFragment.OnSortChangeListener {
 
     public static final String EXTRA_MAP_ID = "map_id";
     List<Point> points;
@@ -78,7 +76,7 @@ public class MiningActivity extends AppCompatActivity implements FilterFragment.
                     case 0:
                         return FilterFragment.get(map.mapAttributes);
                     case 1:
-                        return new Frag();
+                        return SortFragment.get(map.mapAttributes);
                 }
                 return null;
             }
@@ -115,17 +113,12 @@ public class MiningActivity extends AppCompatActivity implements FilterFragment.
 
     @Override
     public void onFilterChanged(List<FilterParam> filters) {
-
+        Logger.toast(this, filters.toString());
     }
 
-    public static class Frag extends Fragment {
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            TextView v = new TextView(getActivity());
-            v.setText("Frrag" + Math.random());
-            return v;
 
-        }
+    @Override
+    public void sortChanged(SortingInfo sortingInfo) {
+        Logger.toast(this, sortingInfo.toString());
     }
 }

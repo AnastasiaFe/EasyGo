@@ -33,26 +33,34 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             tools:context="ua.nure.easygo.activities.MapInfoActivity">
 
-
-            <ImageView
-                android:id="@+id/imageIcon"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                app:srcCompat="@color/colorAccent"
-                bind:imageBitmap="@{map.icon}"
-                android:foreground="@android:drawable/ic_menu_report_image"
-                android:foregroundGravity="bottom|right" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageIcon"
-                android:orientation="vertical">
+                android:id="@+id/icon_container">
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/imageIcon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    bind:imageBitmap="@{map.icon}"
+
+                    bind:srcCompat="@color/colorAccent"
+                    android:foregroundGravity="bottom|right"
+                    app:srcCompat="@color/colorAccent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    bind:srcCompat="@android:drawable/ic_menu_camera"
+                    android:id="@+id/imageView3"
+                    android:layout_gravity="bottom|right"
+                    app:srcCompat="@android:drawable/ic_menu_camera" />
+            </FrameLayout>
+
+
 
             <EditText
 
@@ -64,8 +72,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_toRightOf="@+id/imageIcon"
-                android:layout_toEndOf="@+id/imageIcon" />
+                android:layout_toEndOf="@+id/icon_container"
+                android:layout_toRightOf="@+id/icon_container" />
 
             <CheckBox
                 android:id="@+id/checkBox"
@@ -74,8 +82,8 @@
                 android:checked="@={map.isPrivate}"
                 android:text="@string/private_map"
                 android:layout_below="@+id/textView2"
-                android:layout_toRightOf="@+id/imageIcon"
-                android:layout_toEndOf="@+id/imageIcon" />
+                android:layout_toEndOf="@+id/icon_container"
+                android:layout_toRightOf="@+id/icon_container" />
         </RelativeLayout>
 
         <TableRow

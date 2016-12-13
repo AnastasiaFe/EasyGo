@@ -18,5 +18,8 @@ public class MapAttribute implements Serializable{
     public MapAttribute() {
     }
 
-
+    @Override
+    public String toString() {
+        return name;
+    }
 }

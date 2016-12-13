@@ -1,7 +1,5 @@
 package ua.nure.easygo.model;
 
-import com.mysql.jdbc.PreparedStatement;
-
 public class User implements Entity {
     public String login;
     public String password;
@@ -13,22 +11,22 @@ public class User implements Entity {
         this.name = name;
         this.login = login;
         this.password = password;
-	this.role = role;
+        this.role = role;
     }
 
     public User() {
     }
-	
-	@Override
-	public boolean equals(Object obj) {	
-		if (obj == null || !(obj instanceof User)) {
-			return false;
-		}
-		return this.login == ((User)obj).login;
-	}
-	
-	@Override
-	public int hashCode() {
-		return login.hashCode();
-	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof User)) {
+            return false;
+        }
+        return this.login == ((User) obj).login;
+    }
+
+    @Override
+    public int hashCode() {
+        return login.hashCode();
+    }
 }

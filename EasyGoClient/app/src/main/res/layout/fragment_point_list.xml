@@ -8,6 +8,10 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:dividerHeight="10dp"
+    android:divider="@null"
     app:layoutManager="LinearLayoutManager"
     tools:context="easygo.nure.ua.easygoclient.ua.nure.easygo.fragments.PointsListFragment"
-    tools:listitem="@layout/point_item" />
+    tools:listitem="@layout/point_item"
+
+     />

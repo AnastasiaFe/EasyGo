@@ -42,7 +42,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import easygo.nure.ua.easygoclient.R;
 import easygo.nure.ua.easygoclient.databinding.NavHeaderMainBinding;
 import retrofit2.Call;
@@ -53,7 +52,6 @@ import ua.nure.easygo.MapsContext;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
-import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
@@ -67,7 +65,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     NavHeaderMainBinding binding;
     GoogleMapAdapter gAdapter;
     private GoogleMap mMap;
-    private EasyGoService service;
+
     private MapsContext mapsContext;
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -115,12 +113,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             onActivityResult(REQUEST_LOGIN, RESULT_OK, null);
         }
 
-navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        ProfileActivity.start(MapActivity.this);
-    }
-});
+        navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (RestService.authorised(MapActivity.this)) {
+                    ProfileActivity.start(MapActivity.this);
+                }
+            }
+        });
+
+
     }
 
 
@@ -136,6 +138,29 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
             MapsActivity.startWithFullMapList(this, REQUEST_CHOOSE_MAP_FOR_MINING, "Select map for mining", false);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Menu menu = navigationView.getMenu();
+        boolean auth  = RestService.authorised(this);
+        menu.findItem(R.id.menu_login).setVisible(!auth);
+        menu.findItem(R.id.menu_logout).setVisible(auth);
+
+        RestService.get().getUser(LoginHelper.getInstance().getLogin(this)).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                binding.setUser(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 
     /**
@@ -203,7 +228,7 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
                 new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                        RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
                             public void onResponse(Call<Map> call, Response<Map> response) {
                                 Map m = response.body();
@@ -224,7 +249,7 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
                 }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        service.getMap(mapId).enqueue(new Callback<Map>() {
+                        RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
                             @Override
                             public void onResponse(Call<Map> call, Response<Map> response) {
 
@@ -346,7 +371,7 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
 
                 long pointId = ((MatrixCursor) searchView.getSuggestionsAdapter().getItem(position)).getLong(0);
                 //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(0, 0), 10)));
-                service.getPoint(pointId).enqueue(new Callback<Point>() {
+                RestService.get().getPoint(pointId).enqueue(new Callback<Point>() {
                     @Override
                     public void onResponse(Call<Point> call, Response<Point> response) {
                         Point p = response.body();
@@ -377,7 +402,7 @@ navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
                 startActivityForResult(loginIntent, REQUEST_LOGIN);
                 break;
             case R.id.menu_settings:
-               Intent settingsIntent=new Intent(this,SettingsActivity.class);
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);
                 break;
             case R.id.menu_logout:

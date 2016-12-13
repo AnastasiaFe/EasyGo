@@ -1,10 +1,13 @@
 package ua.nure.easygo.fragments;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,6 @@ import java.util.List;
 
 import easygo.nure.ua.easygoclient.R;
 import ua.nure.easygo.mining.FilterParam;
-import ua.nure.easygo.model.attributes.AttributeType;
 import ua.nure.easygo.model.attributes.MapAttribute;
 import ua.nure.easygo.model.attributes.MapAttributes;
 import ua.nure.easygo.utils.TextViewMaster;
@@ -42,7 +44,7 @@ public class FilterFragment extends Fragment {
 
     MapAttributes mapAttributes;
     List<FilterParam> filterParams;
-
+    OnFilterChangedListener listener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,9 +61,11 @@ public class FilterFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof OnFilterChangedListener)) {
+        Activity activity = getActivity();
+        if (!(activity instanceof OnFilterChangedListener)) {
             throw new RuntimeException("Container activity must implement filter changed listener");
         }
+        listener = (OnFilterChangedListener) activity;
     }
 
     @Override
@@ -73,7 +77,7 @@ public class FilterFragment extends Fragment {
             if (!a.type.filterable) {
                 continue;
             }
-            FilterParam param = new FilterParam(mapAttributes.getId(a));
+            final FilterParam param = new FilterParam(mapAttributes.getId(a));
             filterParams.add(param);
 
             ViewGroup view = (ViewGroup) inflater.inflate(R.layout.item_filter, filtersContainer, false);
@@ -83,18 +87,71 @@ public class FilterFragment extends Fragment {
             View filter = null;
             switch (a.type) {
 
-                case INTEGER:
-                case DOUBLE:
+                case INTEGER: {
                     filter = inflater.inflate(R.layout.filter_text, view, false);
-                    TextViewMaster.setInputFormat((TextView) filter.findViewById(R.id.min), TextViewMaster.TextFormat.INT);
-                    TextViewMaster.setInputFormat((TextView) filter.findViewById(R.id.max), TextViewMaster.TextFormat.INT);
+                    TextView min = (TextView) filter.findViewById(R.id.min), max = (TextView) filter.findViewById(R.id.max);
+                    TextViewMaster.setInputFormat(min, TextViewMaster.TextFormat.INT);
+                    TextViewMaster.setInputFormat(max, TextViewMaster.TextFormat.INT);
+                    min.addTextChangedListener(new FilterParamListener(min, TextViewMaster.TextFormat.INT) {
+                        @Override
+                        public void acceptParam(Object paramValue) {
+                            param.setMin(paramValue);
+                            listener.onFilterChanged(filterParams);
+                        }
+                    });
+                    max.addTextChangedListener(new FilterParamListener(max, TextViewMaster.TextFormat.INT) {
+                        @Override
+                        public void acceptParam(Object paramValue) {
+                            param.setMax(paramValue);
+                            listener.onFilterChanged(filterParams);
+                        }
+                    });
 
-                    break;
+                }
+                case DOUBLE: {
+                    filter = inflater.inflate(R.layout.filter_text, view, false);
+                    TextView min = (TextView) filter.findViewById(R.id.min), max = (TextView) filter.findViewById(R.id.max);
+                    TextViewMaster.setInputFormat(min, TextViewMaster.TextFormat.DOUBLE);
+                    TextViewMaster.setInputFormat(max, TextViewMaster.TextFormat.DOUBLE);
+                    min.addTextChangedListener(new FilterParamListener(min, TextViewMaster.TextFormat.DOUBLE) {
+                        @Override
+                        public void acceptParam(Object paramValue) {
+                            param.setMin(paramValue);
+                            listener.onFilterChanged(filterParams);
+                        }
+                    });
+                    max.addTextChangedListener(new FilterParamListener(max, TextViewMaster.TextFormat.DOUBLE) {
+                        @Override
+                        public void acceptParam(Object paramValue) {
+                            param.setMax(paramValue);
+                            listener.onFilterChanged(filterParams);
+                        }
+                    });
+                }
+                break;
 
                 case RATING:
                     filter = inflater.inflate(R.layout.filter_rating, view, false);
                 {
                     RatingBar min = (RatingBar) filter.findViewById(R.id.min), max = (RatingBar) filter.findViewById(R.id.max);
+                    min.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                        @Override
+                        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                            if (fromUser) {
+                                param.setMin(rating);
+                                listener.onFilterChanged(filterParams);
+                            }
+                        }
+                    });
+                    max.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                        @Override
+                        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                            if (fromUser) {
+                                param.setMax(rating);
+                                listener.onFilterChanged(filterParams);
+                            }
+                        }
+                    });
                 }
                 break;
             }
@@ -108,6 +165,51 @@ public class FilterFragment extends Fragment {
 
     public interface OnFilterChangedListener {
         void onFilterChanged(List<FilterParam> filters);
+    }
+
+    public static abstract class FilterParamListener implements TextWatcher {
+
+        private TextView target;
+        private TextViewMaster.TextFormat textFormat;
+
+        public FilterParamListener(TextView target, TextViewMaster.TextFormat textFormat) {
+            this.target = target;
+            this.textFormat = textFormat;
+        }
+
+        public abstract void acceptParam(Object paramValue);
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String text = target.getText().toString();
+            Object res = null;
+            try {
+                switch (textFormat) {
+                    case STRING:
+                        res = text;
+                        break;
+                    case INT:
+                        res = Integer.parseInt(text);
+                        break;
+                    case DOUBLE:
+                        res = Double.parseDouble(text);
+                        break;
+                }
+            } catch (NumberFormatException e) {
+
+            }
+            acceptParam(res);
+        }
     }
 
 }

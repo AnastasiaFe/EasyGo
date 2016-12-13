@@ -27,7 +27,7 @@ public class UserDAOImpl implements UserDAO {
     public User createUser(User user) throws SQLException {
         if (getUser(user.login) == null) {
 
-            final String queryInsert = "INSERT INTO " + DB_NAME + "." + TABLE_NAME + " (login, password, name) values ('"
+            final String queryInsert = "INSERT INTO " + DB_NAME + "." + TABLE_NAME + " (login, password, name, role) values ('"
                     + user.login + "','" + user.password + "','" + user.name + "','" + user.role + "');";
             MySqlConnector.execute(queryInsert);
             return user;

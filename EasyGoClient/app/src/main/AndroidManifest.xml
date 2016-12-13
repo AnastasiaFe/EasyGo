@@ -61,7 +61,7 @@
             android:name="ua.nure.easygo.activities.SettingsActivity"
             android:label="Settings" />
         <activity android:name="ua.nure.easygo.activities.MiningActivity" />
-        <activity android:name="ua.nure.easygo.activities.ProfileActivity"></activity>
+        <activity android:name="ua.nure.easygo.activities.ProfileActivity" />
     </application>
 
 </manifest>

@@ -37,4 +37,13 @@ public class FilterParam {
     public void setMax(Object max) {
         this.max = max;
     }
+
+    @Override
+    public String toString() {
+        return "FilterParam{" +
+                "mapAttrIndex=" + mapAttrIndex +
+                ", min=" + min +
+                ", max=" + max +
+                '}';
+    }
 }
