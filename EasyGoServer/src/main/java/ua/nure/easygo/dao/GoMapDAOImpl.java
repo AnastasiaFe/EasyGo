@@ -68,7 +68,7 @@ public class GoMapDAOImpl implements GoMapDAO {
     @Override
     public boolean removeMap(long id) {
         try {
-            MySqlConnector.execute("DELETE FROM maps WHERE map_id = '" + id + "';");
+            MySqlConnector.execute("DELETE FROM gomaps WHERE map_id = '" + id + "';");
             return true;
         } catch (Exception ex) {
             return false;

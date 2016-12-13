@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -19,18 +20,21 @@ import ua.nure.easygo.fragments.FilterFragment;
 import ua.nure.easygo.fragments.PointsListFragment;
 import ua.nure.easygo.fragments.SortFragment;
 import ua.nure.easygo.mining.FilterParam;
+import ua.nure.easygo.mining.Filterer;
+import ua.nure.easygo.mining.Sorterer;
 import ua.nure.easygo.mining.SortingInfo;
 import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.rest.RestService;
-import ua.nure.easygo.utils.Logger;
 
 public class MiningActivity extends AppCompatActivity implements FilterFragment.OnFilterChangedListener, SortFragment.OnSortChangeListener {
 
     public static final String EXTRA_MAP_ID = "map_id";
     List<Point> points;
     Map map;
-    PointsListFragment pointsListFragment;
+    private List<FilterParam> filters;
+    private SortingInfo sortingInfo;
+
 
     public static void start(Context c, long mapId) {
         Intent intent = new Intent(c, MiningActivity.class);
@@ -111,14 +115,25 @@ public class MiningActivity extends AppCompatActivity implements FilterFragment.
         list.setPoints(points);
     }
 
+    private void processMining() {
+        List<Point> copy = new LinkedList<>(points);
+        Filterer.filter(copy, filters, map.mapAttributes);
+        Sorterer.sort(copy, map.mapAttributes, sortingInfo);
+        list.setPoints(copy);
+    }
+
     @Override
     public void onFilterChanged(List<FilterParam> filters) {
-        Logger.toast(this, filters.toString());
+        this.filters = filters;
+        //Logger.toast(this, filters.toString());
+        processMining();
     }
 
 
     @Override
     public void sortChanged(SortingInfo sortingInfo) {
-        Logger.toast(this, sortingInfo.toString());
+        this.sortingInfo = sortingInfo;
+        processMining();
+        //Logger.toast(this, sortingInfo.toString());
     }
 }

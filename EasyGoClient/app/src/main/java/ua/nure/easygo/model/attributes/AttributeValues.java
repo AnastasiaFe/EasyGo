@@ -29,6 +29,11 @@ public class AttributeValues {
         values.add(new AttributeValue(attributeId, value));
     }
 
+    public String getStringValue(int attrIndex) {
+        AttributeValue value = getValueOfAttribute(attrIndex);
+        return value == null ? null : value.value;
+    }
+
     public AttributeValue getValueOfAttribute(int attrIndex) {
         for (AttributeValue v : values) {
             if (v.attributeId == attrIndex) {

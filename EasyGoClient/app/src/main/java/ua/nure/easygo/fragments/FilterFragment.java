@@ -138,7 +138,7 @@ public class FilterFragment extends Fragment {
                         @Override
                         public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                             if (fromUser) {
-                                param.setMin(rating);
+                                param.setMin((double)rating);
                                 listener.onFilterChanged(filterParams);
                             }
                         }
@@ -147,7 +147,7 @@ public class FilterFragment extends Fragment {
                         @Override
                         public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                             if (fromUser) {
-                                param.setMax(rating);
+                                param.setMax((double)rating);
                                 listener.onFilterChanged(filterParams);
                             }
                         }

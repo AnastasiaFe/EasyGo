@@ -59,9 +59,9 @@ public interface EasyGoService {
 
 
     @DELETE("points/{id}")
-    Call<Void> deletePoint(@Path("id") long id);
+    Call<Boolean> deletePoint(@Path("id") long id);
 
     @DELETE("maps/{id}")
-    Call<Void> deleteMap(@Path("id") long id);
+    Call<Boolean> deleteMap(@Path("id") long id);
 
 }

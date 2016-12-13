@@ -23,6 +23,7 @@ import ua.nure.easygo.Constants;
 import ua.nure.easygo.LoginHelper;
 import ua.nure.easygo.adapters.MapAttributesAdapter;
 import ua.nure.easygo.model.Map;
+import ua.nure.easygo.model.User;
 import ua.nure.easygo.model.attributes.AttributeType;
 import ua.nure.easygo.model.attributes.MapAttribute;
 import ua.nure.easygo.rest.EasyGoService;
@@ -114,9 +115,37 @@ public class MapInfoActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
+        RestService.get().getUser(LoginHelper.getInstance().getLogin(this)).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.body() != null && response.body().isAdmin()) {
+                    menu.add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            RestService.get().deleteMap(binding.getMap().mapId).enqueue(new Callback<Boolean>() {
+                                @Override
+                                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                    finish();
+                                }
 
+                                @Override
+                                public void onFailure(Call<Boolean> call, Throwable t) {
+
+                                }
+                            });
+                            return false;
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
         return true;
     }
 
@@ -126,15 +155,15 @@ public class MapInfoActivity extends AppCompatActivity {
             service.postMap(binding.getMap()).enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-
+                    finish();
                 }
 
                 @Override
                 public void onFailure(Call<Boolean> call, Throwable t) {
-
+                    Logger.toast(MapInfoActivity.this, t.getMessage());
                 }
             });
-            finish();
+
         }
         return super.onOptionsItemSelected(item);
 

@@ -3,6 +3,7 @@ package ua.nure.easygo.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -138,12 +139,26 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_maps, menu);
         if (!editing) {
             menu.findItem(R.id.add).setVisible(false);
         }
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                reloadMaps();
+                return true;
+            }
+        });
+
+
         if (!searching) {
             menu.findItem(R.id.action_search).setVisible(false);
         } else {
@@ -185,24 +200,34 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+    void reloadMaps() {
+        service.getMaps().enqueue(new Callback<List<Map>>() {
+            @Override
+            public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
+                List<Map> maps = response.body();
+                filterMaps(maps);
+                adapter = new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map);
+                listView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Map>> call, Throwable t) {
+                //TODO: Add error handling
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadMaps();
+    }
+
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CREATE_MAP) {
-            service.getMaps().enqueue(new Callback<List<Map>>() {
-                @Override
-                public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
-                    List<Map> maps = response.body();
-                    filterMaps(maps);
-                    adapter = new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map);
-                    listView.setAdapter(adapter);
-                }
 
-                @Override
-                public void onFailure(Call<List<Map>> call, Throwable t) {
-                    //TODO: Add error handling
-                }
-            });
         }
     }
 

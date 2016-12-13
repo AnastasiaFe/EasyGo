@@ -68,6 +68,11 @@ public class MyController {
         return new GoMapDAOImpl().postGoMap(m);
     }
 
+    @RequestMapping(value = "maps/{id}", method = RequestMethod.DELETE)
+    public boolean deleteMap(@PathVariable("id") long id){
+        return new GoMapDAOImpl().removeMap(id);
+    }
+
     @RequestMapping("users/{login}")
     public User getUser(@PathVariable("login") String login) throws SQLException {
 

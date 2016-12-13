@@ -16,12 +16,18 @@ public class MapsContext {
         maps = new HashSet<>();
     }
 
+
     public void add(Map map) throws MapAlreadyAddedException {
+        mAdd(map);
+        listener.mapsContextChanged(this);
+    }
+
+    private void mAdd(Map map) throws MapAlreadyAddedException {
         if (maps.contains(map)) {
             throw new MapAlreadyAddedException();
         }
         maps.add(map);
-        listener.mapsContextChanged(this);
+
     }
 
 
@@ -45,19 +51,21 @@ public class MapsContext {
 
     public void removeAll() {
         maps.clear();
-        listener.mapsContextChanged(this);
+
+        // listener.mapsContextChanged(this);
     }
 
     public void replace(Map map) {
         removeAll();
         //is safe because context is empty
         try {
-            add(map);
+            mAdd(map);
         } catch (MapAlreadyAddedException e) {
             e.printStackTrace();
         }
         listener.mapsContextChanged(this);
     }
+
 
     public boolean contains(Map m) {
         return maps.contains(m);

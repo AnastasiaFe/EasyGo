@@ -1,8 +1,11 @@
 package ua.nure.easygo.mining;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ua.nure.easygo.model.Point;
+import ua.nure.easygo.model.attributes.AttributeValue;
 import ua.nure.easygo.model.attributes.MapAttributes;
 
 /**
@@ -10,34 +13,72 @@ import ua.nure.easygo.model.attributes.MapAttributes;
  */
 
 public class Filterer {
-	static final Date DEFAULT_MIN_DATE = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse("January 1, 2000");
+/*
+    static final Date DEFAULT_MIN_DATE = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse("January 1, 2000");
 	static final Date DEFAULT_MIN_DATE = new Date();
 	static final int MIN_RATING=0;
 	static final int MAX_RATING=0;
-}
+*/
+
 
     public static void filter(List<Point> points, List<FilterParam> filterParams, MapAttributes mapAttributes) {
+        if (filterParams == null) {
+            return;
+        }
+        Set<Point> pointsToRemove = new HashSet<>();
 
-    	 for(Point point: points) {
-             for (FilterParam filterParam: filterParams) {
-                 switch(mapAttributes[filterParam.mapAttrIndex].type){
-                     case INTEGER :
-                    
-                          int min = (int)filterParam.min, max = (int)filterParam.max;
-                
-                          int val = Integer.valueOf(point.attributeValues.getValueOfAttribute(filterParam.mapAttrIndex));
-                          if(val<min || val > max)  points.remove(point);
-                          break;
-                      case STRING :
-                    	  String key=filterParam.min;
+        for (Point point : points) {
+            for (FilterParam filterParam : filterParams) {
+                Object min = filterParam.getMin(), max = filterParam.getMax();
+                AttributeValue attributeValue = point.attributeValues.getValueOfAttribute(filterParam.getMapAttrIndex());
+                if (attributeValue == null) {
+                    continue;
+                }
+                String val = attributeValue.value;
+                //keep point if it has no value for this attr
+                if (val == null) {
+                    continue;
+                }
+
+                switch (mapAttributes.attributes.get(filterParam.getMapAttrIndex()).type) {
+                    case INTEGER: {
+                        try {
+                            int intVal = Integer.valueOf(val);
+                            if ((min != null && ((int) min) > intVal) || (max != null && ((int) max) < intVal)) {
+                                pointsToRemove.add(point);
+                            }
+                        } catch (NumberFormatException e) {
+
+                        }
+                    }
+
+
+                    break;
+                    case RATING:
+                    case DOUBLE: {
+                        try {
+                            double doubleVal = Double.valueOf(val);
+                            if ((min != null && ((double) min) > doubleVal) || (max != null && ((double) max) < doubleVal)) {
+                                pointsToRemove.add(point);
+                            }
+                        } catch (NumberFormatException e) {
+
+                        }
+                    }
+                    break;
+
+
+
+                  /*    case STRING :
+                          String key=filterParam.min;
                     	  //filterParam.max field is not avaible for String attributes
                     	  String val=point.attributeValues.getValueOfAttribute(filterParam.mapAttrIndex);
                     	  if(!val.contains(key)) points.remove(point);
                           break;
                     	  
-                      break;
-                      case DATE_TIME:
-                    	  String strMinDate=filterParam.min, strManDate = filterParam.max;
+                      break;*/
+                    /*  case DATE_TIME:
+                          String strMinDate=filterParam.min, strManDate = filterParam.max;
                     	  //What data format is used in input field?
                     	  DateFormat formatter  = new SimpleDateFormat("dd/MM/yyyy");
                     	  Date date1, date2; 
@@ -59,27 +100,16 @@ public class Filterer {
                           Date val = formatter.parse(point.attributeValues.getValueOfAttribute(filterParam.mapAttrIndex)));
                           if(val<date1 || val > date2) points.remove(point);
                           break;
-                    	  
-                      case DOUBLE:  
-                    	  
-                    double min = (double)filterParam.min, max = (double)filterParam.max;                      
-                      double val = Double.valueOf(point.attributeValues.getValueOfAttribute(filterParam.mapAttrIndex));
-                      if(val<min || val > max)  points.remove(point);
-                      break;
-                    	  
-                      case RATING:
-                    	  int min = (int)filterParam.min, max = (int)filterParam.max;
-                    	  if(min<MIN_RATING) min=MIN_RATING;
-                    	  if(max>MAX_RATING) max=MAX_RATING;
-                          int val = Integer.valueOf(point.attributeValues.getValueOfAttribute(filterParam.mapAttrIndex));
-                          if(val<min || val > max)  points.remove(point);
-                          break;
-                    	  
-                       
-                     }
-                         
-                 }
+                    	  */
+
+
+                }
+
+            }
+
+        }
+
+        points.removeAll(pointsToRemove);
 
     }
-
 }
