@@ -27,7 +27,7 @@ public class LoginHelper {
         return c.getSharedPreferences(LOGIN_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    private void loadUser(Context context) {
+    private void  loadUser(Context context) {
         SharedPreferences preferences = getPrefs(context);
         if (hasCredentials(context)) {
             login = preferences.getString(LOGIN, "");

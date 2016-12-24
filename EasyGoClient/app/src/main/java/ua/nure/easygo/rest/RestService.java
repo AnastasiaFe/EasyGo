@@ -43,7 +43,7 @@ public class RestService {
 
     public static void init(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SERVER_URL = preferences.getString("editIPPref", "http://192.168.43.13:8080/");
+        SERVER_URL = preferences.getString("editIPPref", "http://ec2-35-161-67-42.us-west-2.compute.amazonaws.com:8080/");
         if (service == null) {
 
             File httpCacheDirectory = new File(context.getCacheDir(), "responses");

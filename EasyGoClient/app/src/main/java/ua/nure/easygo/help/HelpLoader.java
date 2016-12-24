@@ -21,7 +21,7 @@ public class HelpLoader {
 
     public static HelpItem load(Context context, Class clas) {
 
-        String folder = clas.getSimpleName() + '/';
+        String folder = "help/en/" + clas.getSimpleName() + '/';
 
         AssetManager assetManager = context.getResources().getAssets();
 
