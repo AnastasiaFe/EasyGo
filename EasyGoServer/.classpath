@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry exported="true" kind="lib" path="D:/Work/_Java/_projects/EasyGoServer/gson-2.2.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="D:/Work/_Java/_projects/EasyGoServer/gson-2.2.4-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="D:/Work/_Java/_projects/EasyGoServer/mysql-connector-java-5.1.40-bin.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>

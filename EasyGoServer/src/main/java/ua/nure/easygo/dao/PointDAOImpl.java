@@ -112,7 +112,7 @@ public class PointDAOImpl implements PointDAO {
         return points;
     }
 
-    public static void main(String[] args) throws Exception {
+    public  void main(String[] args) throws Exception {
         PointDAOImpl impl = new PointDAOImpl();
         impl.postPoint(new Point(1L, 2.2f, 3.3f, "asd", 0, "val"));
     }

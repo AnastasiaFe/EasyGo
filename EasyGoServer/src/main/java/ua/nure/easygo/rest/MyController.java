@@ -12,10 +12,12 @@ import ua.nure.easygo.model.Point;
 import ua.nure.easygo.model.User;
 import ua.nure.easygo.util.ImageHelper;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+
 
 
 @RestController
