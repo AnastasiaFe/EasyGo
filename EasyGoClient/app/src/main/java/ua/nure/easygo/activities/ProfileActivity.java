@@ -31,7 +31,7 @@ import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.Logger;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     private static final int REQUEST_SELECT_AVATAR = 1;
 

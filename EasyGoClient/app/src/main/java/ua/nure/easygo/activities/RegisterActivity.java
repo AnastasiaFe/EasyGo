@@ -22,7 +22,7 @@ import ua.nure.easygo.model.User;
 import ua.nure.easygo.rest.RestService;
 
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends BaseActivity {
 
     View registerForm;
     View progressBar;

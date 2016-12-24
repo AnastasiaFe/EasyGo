@@ -35,7 +35,7 @@ import ua.nure.easygo.utils.ArrayUtil;
  * <p>
  * EXTRA_MAP_ITEMS specify array of maps ids being displayed. If it is not specified, full maps list will be displayed.
  */
-public class MapsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MapsActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     public static final String EXTRA_MAP_ID = "map_id";
     private static final int REQUEST_CREATE_MAP = 1;
     private static final String EXTRA_MAP_ITEMS = "map_items", EXTRA_TITLE = "title", EXTRA_EDITING = "editing";

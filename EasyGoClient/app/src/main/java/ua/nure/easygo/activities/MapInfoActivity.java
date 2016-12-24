@@ -31,7 +31,7 @@ import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.Logger;
 
-public class MapInfoActivity extends AppCompatActivity {
+public class MapInfoActivity extends BaseActivity {
 
     public static final String EXTRA_MAP_ID = "map_id";
     private static final int REQUEST_SELECT_ICON = 1;

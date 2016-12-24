@@ -20,7 +20,7 @@ import ua.nure.easygo.model.Point;
 import ua.nure.easygo.rest.EasyGoService;
 import ua.nure.easygo.rest.RestService;
 
-public class PointActivity extends AppCompatActivity {
+public class PointActivity extends BaseActivity {
 
     public static final String EXTRA_POINT_ID = "point_id", EXTRA_MAP_ID = "map_id", EXTRA_LOC = "location";
 

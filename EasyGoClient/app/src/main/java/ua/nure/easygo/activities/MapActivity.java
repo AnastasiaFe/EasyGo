@@ -1,6 +1,7 @@
 package ua.nure.easygo.activities;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +42,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.concurrent.Executors;
+
 import butterknife.ButterKnife;
 import easygo.nure.ua.easygoclient.R;
 import easygo.nure.ua.easygoclient.databinding.NavHeaderMainBinding;
@@ -56,7 +59,7 @@ import ua.nure.easygo.rest.ImageService;
 import ua.nure.easygo.rest.RestService;
 import ua.nure.easygo.utils.GoogleMapAdapter;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
+public class MapActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
         GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener, MapsContext.MapsContextListener {
 
     public static final int REQUEST_MAPS = 1, REQUEST_POINT_EDITING = 2,
@@ -125,6 +128,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+
+
+    public void a(){
+
+    }
 
     public void showProfile() {
         // if (!LoginHelper.getInstance().getLogin(this).isEmpty()) {

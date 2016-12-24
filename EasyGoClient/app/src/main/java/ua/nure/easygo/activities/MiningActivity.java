@@ -27,7 +27,7 @@ import ua.nure.easygo.model.Map;
 import ua.nure.easygo.model.Point;
 import ua.nure.easygo.rest.RestService;
 
-public class MiningActivity extends AppCompatActivity implements FilterFragment.OnFilterChangedListener, SortFragment.OnSortChangeListener {
+public class MiningActivity extends BaseActivity implements FilterFragment.OnFilterChangedListener, SortFragment.OnSortChangeListener {
 
     public static final String EXTRA_MAP_ID = "map_id";
     List<Point> points;
