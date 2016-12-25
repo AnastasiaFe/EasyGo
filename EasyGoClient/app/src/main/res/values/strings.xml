@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EasyGoClient</string>
+    <string name="app_name">EasyGo</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="login_hint">Login</string>
@@ -9,6 +9,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
+    <string name="logout">Log out</string>
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -39,16 +40,33 @@
     <string name="replace">Replace</string>
     <string name="cancel">Cancel</string>
     <string name="select_map">Select map for point adding</string>
-    <string name="cafee">Cafee</string>
+    <string name="cafee">Cafe</string>
+    <string name="select_icon">Select icon</string>
+    <string name="newN">new</string>
+    <string name="delete">Delete</string>
     <string name="point">point</string>
     <string name="select_map_to_view">"Select map to view</string>
     <string name="en_but">English</string>
+    <string name="got_it">Got it</string>
+    <string name="remind_later">Remind later</string>
+    <string name="select_for_mining">Select map for mining</string>
+    <string name="filter">Filter</string>
+    <string name="sort">Sort</string>
+    <string name="select_avatar">Select avatar</string>
     <string name="ru_but">Russian</string>
     <string name="uk_but">Ukrainian</string>
     <string name="lan_select">Select language</string>
     <string name="summary">Here you can set the server ip</string>
     <string name="ip">IP-adress</string>
-
+    <string name="type_new_pass">Type here new password</string>
+    <string name="change">Change</string>
+<string name="filter_sort">Filter and sort</string>
+    <string name="help_message">Help message</string>
+    <string name="select_attr">Select attribute</string>
+    <string name="min">min</string>
+    <string name="filter_name">Filter name</string>
+    <string name="max">max</string>
+    <string name="search_points">Search points</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>

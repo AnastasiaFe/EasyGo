@@ -15,5 +15,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/dialog_text"
-        tools:text="Help message" />
+        tools:text="@string/help_message" />
 </LinearLayout>
