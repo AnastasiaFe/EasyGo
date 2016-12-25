@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +41,7 @@ public class MapInfoActivity extends BaseActivity {
 
     ActivityMapInfoBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,20 +59,22 @@ public class MapInfoActivity extends BaseActivity {
 
         service = RestService.get();
         final long mapId = getIntent().getLongExtra(EXTRA_MAP_ID, Constants.ID_NONE);
+
         if (mapId != Constants.ID_NONE) {
 
+            startFetching();
             service.getMap(mapId).enqueue(new Callback<Map>() {
                 @Override
                 public void onResponse(Call<Map> call, Response<Map> response) {
                     binding.setMap(response.body());
 
                     adapter = new MapAttributesAdapter(binding.mapAttributes, response.body().mapAttributes.attributes);
-
+                    endFetching();
                 }
 
                 @Override
                 public void onFailure(Call<Map> call, Throwable t) {
-
+                    endFetching();
                 }
             });
 
@@ -124,15 +126,17 @@ public class MapInfoActivity extends BaseActivity {
                     menu.add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
+                            startFetching();
                             RestService.get().deleteMap(binding.getMap().mapId).enqueue(new Callback<Boolean>() {
                                 @Override
                                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                    endFetching();
                                     finish();
                                 }
 
                                 @Override
                                 public void onFailure(Call<Boolean> call, Throwable t) {
-
+                                    endFetching();
                                 }
                             });
                             return false;

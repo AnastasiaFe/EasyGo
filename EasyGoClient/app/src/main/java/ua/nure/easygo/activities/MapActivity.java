@@ -1,7 +1,6 @@
 package ua.nure.easygo.activities;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -41,8 +39,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-
-import java.util.concurrent.Executors;
 
 import butterknife.ButterKnife;
 import easygo.nure.ua.easygoclient.R;
@@ -129,8 +125,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     }
 
 
-
-    public void a(){
+    public void a() {
 
     }
 
@@ -154,7 +149,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         super.onResume();
 
         Menu menu = navigationView.getMenu();
-        boolean auth  = RestService.authorised(this);
+        boolean auth = RestService.authorised(this);
         menu.findItem(R.id.menu_login).setVisible(!auth);
         menu.findItem(R.id.menu_logout).setVisible(auth);
 
@@ -304,6 +299,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
     @Override
     public void onMapLongClick(LatLng latLng) {
+        if (!RestService.authorised(this)) {
+            return;
+        }
         MapsActivity.startWithCertainMapList(this, REQUEST_MAP_FOR_ADDING_POINT, mapsContext.getMapIds(), "Select map for point adding", false);
 
         intAddPoint = new Intent(this, PointActivity.class);
@@ -423,10 +421,17 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     }
 
     private void syncMapWithMapsContext() {
+        startFetching();
         if (gAdapter != null) {
             gAdapter.clear();
             gAdapter.fill(mapsContext);
         }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        endFetching();
     }
 
     @Override

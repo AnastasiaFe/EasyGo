@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 
 /**
@@ -21,7 +22,14 @@ public class HelpLoader {
 
     public static HelpItem load(Context context, Class clas) {
 
-        String folder = "help/en/" + clas.getSimpleName() + '/';
+        Locale locale = context.getResources().getConfiguration().locale;
+        String langFolder = "en";
+        boolean rus=false;
+        if (locale.getLanguage().equals("ru") || locale.getLanguage().equals("uk")) {
+            langFolder="ru";
+            rus=true;
+        }
+        String folder = "help/" + langFolder + "/" + clas.getSimpleName() + '/';
 
         AssetManager assetManager = context.getResources().getAssets();
 
@@ -35,7 +43,7 @@ public class HelpLoader {
         }
 
         try {
-            text = readAsText(assetManager.open(folder + TEXT));
+            text = readAsText(assetManager.open(folder + TEXT), rus);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,9 +54,9 @@ public class HelpLoader {
         return new HelpItem(bmp, text);
     }
 
-    private static String readAsText(InputStream is) throws IOException {
+    private static String readAsText(InputStream is,boolean rus) throws IOException {
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, rus?"windows-1251":"UTF-8"));
         StringBuilder sb = new StringBuilder();
         while (reader.ready()) {
             sb.append(reader.readLine()).append("\n");

@@ -46,7 +46,7 @@ public class RestService {
         SERVER_URL = preferences.getString("editIPPref", "http://ec2-35-161-67-42.us-west-2.compute.amazonaws.com:8080/");
         if (service == null) {
 
-            File httpCacheDirectory = new File(context.getCacheDir(), "responses");
+            //File httpCacheDirectory = new File(context.getCacheDir(), "responses");
 
 
             //TODO: replace url
@@ -56,11 +56,10 @@ public class RestService {
                         public Response intercept(Chain chain) throws IOException {
                             Request request = chain.request().newBuilder()
                                     .addHeader("Token", token)
-                                    .addHeader("Cache-Control", "max-age=86400")
                                     .build();
                             return chain.proceed(request);
                         }
-                    }).cache(new Cache(httpCacheDirectory, 30 * 1024 * 1024))
+                    })
                     .build();
 
             Gson gson = new GsonBuilder()

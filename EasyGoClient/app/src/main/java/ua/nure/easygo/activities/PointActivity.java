@@ -2,7 +2,6 @@ package ua.nure.easygo.activities;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TableLayout;
@@ -50,29 +49,32 @@ public class PointActivity extends BaseActivity {
 
         if (id > 0) {
 
+            startFetching();
             service.getPoint(id).enqueue(new Callback<Point>() {
                 @Override
                 public void onResponse(Call<Point> call, Response<Point> response) {
 
                     binding.setPoint(response.body());
+                    startFetching();
                     service.getMap(response.body().mapId).enqueue(new Callback<Map>() {
                         @Override
                         public void onResponse(Call<Map> call, Response<Map> response) {
                             binding.setMap(response.body());
                             PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table, !editing);
+                            endFetching();
                         }
 
                         @Override
                         public void onFailure(Call<Map> call, Throwable t) {
-
+                            endFetching();
                         }
                     });
-
+                    endFetching();
                 }
 
                 @Override
                 public void onFailure(Call<Point> call, Throwable t) {
-
+                    endFetching();
                 }
             });
         } else {
@@ -84,6 +86,7 @@ public class PointActivity extends BaseActivity {
             binding.setPoint(p);
             long mapId =
                     getIntent().getLongExtra(EXTRA_MAP_ID, 0);
+            startFetching();
             service.getMap(mapId).enqueue(new Callback<Map>() {
                 @Override
                 public void onResponse(Call<Map> call, Response<Map> response) {
@@ -92,11 +95,12 @@ public class PointActivity extends BaseActivity {
                     binding.setMap(response.body());
                     p.mapId = response.body().mapId;
                     PointAttrAdapter attrAdapter = new PointAttrAdapter(PointActivity.this, response.body().mapAttributes.attributes, binding.getPoint().attributeValues, table, !editing);
+                    endFetching();
                 }
 
                 @Override
                 public void onFailure(Call<Map> call, Throwable t) {
-
+                    endFetching();
                 }
             });
         }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -43,6 +42,7 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
     ListView listView;
     ListAdapter adapter;
     private boolean editing, searching = true;
+    private String login;
 
     public static void startWithFullMapList(Activity context, int requestCode, String title, boolean editing) {
 
@@ -77,6 +77,8 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        login = LoginHelper.getInstance().getLogin(this);
+
         editing = getIntent().getBooleanExtra(EXTRA_EDITING, true) && RestService.authorised(this);
 
 
@@ -85,6 +87,7 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
         service = RestService.get();
 
 
+        startFetching();
         service.getMaps().enqueue(new Callback<List<Map>>() {
             @Override
             public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
@@ -104,8 +107,8 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View v = super.getView(position, convertView, parent);
-                        if (!editing) {
-                            v.findViewById(R.id.add).setVisibility(View.INVISIBLE);
+                        if (!editing || !((Map) adapter.getItem(position)).ownerLogin.equals(login)) {
+                            v.findViewById(R.id.map_item_edit).setVisibility(View.INVISIBLE);
                         }
                         return v;
                     }
@@ -113,11 +116,14 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
 
 
                 listView.setAdapter(adapter);
+
+                endFetching();
             }
 
             @Override
             public void onFailure(Call<List<Map>> call, Throwable t) {
                 //TODO: Add error handling
+                endFetching();
             }
         });
 
@@ -142,7 +148,7 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_maps, menu);
         if (!editing) {
-            menu.findItem(R.id.add).setVisible(false);
+            menu.findItem(R.id.menu_add_map).setVisible(false);
         }
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
@@ -174,8 +180,8 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
                                 @Override
                                 public View getView(int position, View convertView, ViewGroup parent) {
                                     View v = super.getView(position, convertView, parent);
-                                    if (!editing) {
-                                        v.findViewById(R.id.add).setVisibility(View.INVISIBLE);
+                                    if (!editing || !((Map) adapter.getItem(position)).ownerLogin.equals(login)) {
+                                        v.findViewById(R.id.map_item_edit).setVisibility(View.INVISIBLE);
                                     }
                                     return v;
                                 }
@@ -201,18 +207,30 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     void reloadMaps() {
+        startFetching();
         service.getMaps().enqueue(new Callback<List<Map>>() {
             @Override
             public void onResponse(Call<List<Map>> call, Response<List<Map>> response) {
                 List<Map> maps = response.body();
                 filterMaps(maps);
-                adapter = new BaseBindableAdapter<>(MapsActivity.this, response.body(), R.layout.map_item, BR.map);
+                adapter = new BaseBindableAdapter<Map>(MapsActivity.this, response.body(), R.layout.map_item, BR.map) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        View v = super.getView(position, convertView, parent);
+                        if (!editing || !((Map) adapter.getItem(position)).ownerLogin.equals(login)) {
+                            v.findViewById(R.id.map_item_edit).setVisibility(View.INVISIBLE);
+                        }
+                        return v;
+                    }
+                };
                 listView.setAdapter(adapter);
+                endFetching();
             }
 
             @Override
             public void onFailure(Call<List<Map>> call, Throwable t) {
                 //TODO: Add error handling
+                endFetching();
             }
         });
     }
@@ -233,7 +251,7 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add) {
+        if (item.getItemId() == R.id.menu_add_map) {
             Intent intent = new Intent(this, MapInfoActivity.class);
             startActivityForResult(intent, REQUEST_CREATE_MAP);
         }
