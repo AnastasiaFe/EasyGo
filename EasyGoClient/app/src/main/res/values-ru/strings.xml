@@ -4,6 +4,7 @@
     <string name="title_activity_main">Главная</string>
     <string name="login_hint">Логин</string>
     <string name="pass_hint">Пароль</string>
+    <string name="logout">Выйти</string>
     <string name="no_account">Еще не имеете акаунта?</string>
     <string name="register">Зарегистрироваться</string>
     <string name="navigation_drawer_open">Открыть панель навигации</string>

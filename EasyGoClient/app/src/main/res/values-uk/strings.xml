@@ -11,6 +11,7 @@
     <string name="action_settings">Налаштування</string>
     <string name="title_activity_login">Вхід</string>
     <string name="prompt_email">Email</string>
+    <string name="logout">Вийти</string>
     <string name="action_sign_in_short">Увійти</string>
     <string name="error_invalid_password">Пароль повинен мати принаймні 6 символів.</string>
     <string name="error_incorrect_password">Неправильний пароль</string>

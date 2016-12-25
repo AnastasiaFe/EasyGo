@@ -6,6 +6,7 @@
     <string name="pass_hint">Password</string>
     <string name="no_account">Do not have an account yet?</string>
     <string name="register">Register</string>
+    <string name="logout">Log out</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
