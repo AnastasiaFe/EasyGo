@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Password" />
+                android:text="@string/pass_hint" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                         android:id="@+id/text_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Type here new password"
+                        android:hint="@string/type_new_pass"
                         android:password="true"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
@@ -106,7 +106,7 @@
                     android:id="@+id/button_change_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Change" />
+                    android:text="@string/change" />
 
             </TableRow>
 

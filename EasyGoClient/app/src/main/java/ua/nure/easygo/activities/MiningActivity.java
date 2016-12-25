@@ -89,9 +89,9 @@ public class MiningActivity extends BaseActivity implements FilterFragment.OnFil
             public CharSequence getPageTitle(int position) {
                 switch (position) {
                     case 0:
-                        return "Filter";
+                        return getString(R.string.filter);
                     case 1:
-                        return "Sort";
+                        return getString(R.string.sort);
                     default:
                         return "";
                 }

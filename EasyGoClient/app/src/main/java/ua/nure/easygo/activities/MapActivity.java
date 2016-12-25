@@ -143,7 +143,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.filter_n_sort) {
-            MapsActivity.startWithFullMapList(this, REQUEST_CHOOSE_MAP_FOR_MINING, "Select map for mining", false);
+            MapsActivity.startWithFullMapList(this, REQUEST_CHOOSE_MAP_FOR_MINING, getString(R.string.select_for_mining), false);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -233,7 +233,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                 drawer.closeDrawer(Gravity.LEFT);
                 final long mapId = data.getLongExtra(MapsActivity.EXTRA_MAP_ID, 0);
 
-                new AlertDialog.Builder(this).setTitle("Map").setMessage("Overlay map with existing or replace?").setNegativeButton("Overlay", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(this).setTitle(getString(R.string.map)).setMessage(getString(R.string.overlay_replace)).setNegativeButton(getString(R.string.overlay), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
@@ -254,7 +254,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                         });
 
                     }
-                }).setPositiveButton("Replace", new DialogInterface.OnClickListener() {
+                }).setPositiveButton(getString(R.string.replace), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RestService.get().getMap(mapId).enqueue(new Callback<Map>() {
@@ -272,7 +272,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                         });
 
                     }
-                }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -304,7 +304,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        MapsActivity.startWithCertainMapList(this, REQUEST_MAP_FOR_ADDING_POINT, mapsContext.getMapIds(), "Select map for point adding", false);
+        MapsActivity.startWithCertainMapList(this, REQUEST_MAP_FOR_ADDING_POINT, mapsContext.getMapIds(), getString(R.string.select_map), false);
 
         intAddPoint = new Intent(this, PointActivity.class);
         intAddPoint.putExtra(PointActivity.EXTRA_LOC, latLng);
@@ -326,8 +326,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         final SearchView searchView =
                 (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        searchView.setQueryHint("Cafee");
-        final String[] from = new String[]{"point"};
+        searchView.setQueryHint(getString(R.string.cafee));
+        final String[] from = new String[]{getString(R.string.point)};
         final int[] to = new int[]{android.R.id.text1};
         final CursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_1,
@@ -350,7 +350,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                 if (mapsContext.isEmpty()) {
                     // return true;
                 }
-                final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "point"});
+                final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, getString(R.string.point)});
 
                 int i = 0;
                 if (gAdapter != null) {
@@ -402,7 +402,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_maps:
-                MapsActivity.startWithFullMapList(this, REQUEST_MAPS, "Select map to view", true);
+                MapsActivity.startWithFullMapList(this, REQUEST_MAPS, getString(R.string.select_map_to_view), true);
 
                 break;
             case R.id.menu_login:

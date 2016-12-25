@@ -32,13 +32,13 @@ public class HelpDialogManager {
             textView.setText(helpItem.getMessage());
 
             AlertDialog alertDialog = new AlertDialog.Builder(context).setView(v)
-                    .setPositiveButton("Got it", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(context.getString(R.string.got_it), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     })
-                    .setNegativeButton("Remind later", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(context.getString(R.string.remind_later), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();

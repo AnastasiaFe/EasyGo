@@ -53,7 +53,7 @@ public class MapInfoActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select icon"), REQUEST_SELECT_ICON);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_icon)), REQUEST_SELECT_ICON);
             }
         });
 
@@ -89,7 +89,7 @@ public class MapInfoActivity extends BaseActivity {
         binding.buttonAddAttribute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.getMap().mapAttributes.attributes.add(new MapAttribute("new", AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
+                binding.getMap().mapAttributes.attributes.add(new MapAttribute(getString(R.string.newN), AttributeType.values()[(int) (Math.random() * AttributeType.values().length)]));
                 adapter = new MapAttributesAdapter(binding.mapAttributes, binding.getMap().mapAttributes.attributes);
                 binding.attrsScroll.fullScroll(View.FOCUS_DOWN);
             }
@@ -121,7 +121,7 @@ public class MapInfoActivity extends BaseActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.body() != null && response.body().isAdmin()) {
-                    menu.add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    menu.add(getString(R.string.delete)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             RestService.get().deleteMap(binding.getMap().mapId).enqueue(new Callback<Boolean>() {

@@ -106,7 +106,7 @@ public class ProfileActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select avatar!"), REQUEST_SELECT_AVATAR);
+        startActivityForResult(Intent.createChooser(intent,getString(R.string.select_avatar)), REQUEST_SELECT_AVATAR);
     }
 
     @Override

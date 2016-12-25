@@ -10,14 +10,14 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:text="min"
+            android:text="@string/min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/min"
             android:layout_weight="0" />
 
         <TextView
-            android:text="Filter name"
+            android:text="@string/filter_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textFilterName"
@@ -26,7 +26,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:text="max"
+            android:text="@string/max"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/max" />
