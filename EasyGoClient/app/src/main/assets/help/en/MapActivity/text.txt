@@ -1,1 +1,6 @@
-Select a point on a map
+Welcome to EasyGo!
+1-main menu
+2-long tap here to add a point
+3-here you can search points
+4-additional menu for mining
+5-your active maps will appear here

@@ -72,6 +72,10 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
         }
     }
 
+    private boolean canEdit(Map map){
+        return editing && (login.equals(map.ownerLogin) || login.equals("admin"));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +111,7 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View v = super.getView(position, convertView, parent);
-                        if (!editing || !((Map) adapter.getItem(position)).ownerLogin.equals(login)) {
+                        if (!canEdit((Map)adapter.getItem(position))) {
                             v.findViewById(R.id.map_item_edit).setVisibility(View.INVISIBLE);
                         }
                         return v;
@@ -180,7 +184,7 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
                                 @Override
                                 public View getView(int position, View convertView, ViewGroup parent) {
                                     View v = super.getView(position, convertView, parent);
-                                    if (!editing || !((Map) adapter.getItem(position)).ownerLogin.equals(login)) {
+                                    if (!canEdit((Map)adapter.getItem(position))) {
                                         v.findViewById(R.id.map_item_edit).setVisibility(View.INVISIBLE);
                                     }
                                     return v;
@@ -217,7 +221,7 @@ public class MapsActivity extends BaseActivity implements AdapterView.OnItemClic
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View v = super.getView(position, convertView, parent);
-                        if (!editing || !((Map) adapter.getItem(position)).ownerLogin.equals(login)) {
+                        if (!canEdit((Map)adapter.getItem(position))) {
                             v.findViewById(R.id.map_item_edit).setVisibility(View.INVISIBLE);
                         }
                         return v;

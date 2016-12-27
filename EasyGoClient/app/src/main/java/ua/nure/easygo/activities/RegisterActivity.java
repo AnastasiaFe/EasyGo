@@ -3,16 +3,13 @@ package ua.nure.easygo.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import android.widget.Toast;
 
 import easygo.nure.ua.easygoclient.R;
 import retrofit2.Call;
@@ -97,21 +94,48 @@ public class RegisterActivity extends BaseActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            User user = new User(email, login, password);
+            final User user = new User(email, login, password);
 
-                RestService.get().postUser(user).enqueue(new Callback<Boolean>() {
-                    @Override
-                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
 
+            RestService.get().getUser(login).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.body() == null) {
+                        RestService.get().postUser(user).enqueue(new Callback<Boolean>() {
+                            @Override
+                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure(Call<Boolean> call, Throwable t) {
+                                finish();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Can`t register user with this login", Toast.LENGTH_LONG).show();
+                        showProgress(false);
+                        //finish();
+                        //startActivity(new Intent(RegisterActivity.this, RegisterActivity.class));
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<Boolean> call, Throwable t) {
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.d("qaz", t.getMessage());
+                    RestService.get().postUser(user).enqueue(new Callback<Boolean>() {
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                            finish();
+                        }
 
-                    }
-                });
-
-            finish();
+                        @Override
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            finish();
+                        }
+                    });
+                }
+            });
 
 
         }

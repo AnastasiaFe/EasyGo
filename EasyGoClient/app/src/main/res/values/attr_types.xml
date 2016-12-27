@@ -3,7 +3,6 @@
     <string-array name="attr_types" >
         <item>INTEGER</item>
         <item>STRING</item>
-        <item>DATE_TIME</item>
         <item>DOUBLE</item>
         <item>RATING</item>
     </string-array>

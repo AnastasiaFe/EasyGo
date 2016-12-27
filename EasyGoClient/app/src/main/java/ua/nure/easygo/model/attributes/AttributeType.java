@@ -11,7 +11,7 @@ package ua.nure.easygo.model.attributes;
 
 public enum AttributeType {
     //DON`T CHANGE NAMES!!
-    INTEGER("Integer", true), STRING("Text", false), DATE_TIME("Time", true), DOUBLE("Real", true), RATING("Rating", true);
+    INTEGER("Integer", true), STRING("Text", false), DOUBLE("Real", true), RATING("Rating", true);
 
     public final String typeName;
     public final boolean filterable;

@@ -91,8 +91,6 @@ public class PointAttrAdapter {
                     }
                 });
                 break;
-            case DATE_TIME:
-                break;
             case DOUBLE:
                 valueView = new EditText(v.getContext());
                 ((TextView) valueView).setSingleLine();
