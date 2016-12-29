@@ -44,8 +44,14 @@ public class Filterer {
                     case INTEGER: {
                         try {
                             int intVal = Integer.valueOf(val);
-                            if ((min != null && ((int) min) > intVal) || (max != null && ((int) max) < intVal)) {
-                                pointsToRemove.add(point);
+                            try {
+                                if ((min != null && ((int) min) > intVal) || (max != null && ((int) max) < intVal)) {
+                                    pointsToRemove.add(point);
+                                }
+                            } catch (Exception e) {
+                                if ((min != null && ((double) min) > intVal) || (max != null && ((double) max) < intVal)) {
+                                    pointsToRemove.add(point);
+                                }
                             }
                         } catch (NumberFormatException e) {
 
